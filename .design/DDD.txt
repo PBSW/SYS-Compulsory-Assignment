@@ -1,0 +1,29 @@
+
+users:
+/api/user/<self>/subscribe/<other>
+/api/user/<self>/unsubscribe/<other>
+
+info     -> gateway(http GET)   -> ms(auth) -> db1
+login    -> gateway(http POST)  -> ms(auth) -> db1
+register -> gateway(http POST)  -> ms(auth) -> db1
+update   -> gateway(http PUT)   -> ms(auth) -> db1
+
+my_followers -> gateway(http GET) -> ms(auth) -> db1
+follow       -> gateway(http POST) -> ms(auth) -> db1
+unfollow     -> gateway(http POST) -> ms(auth) -> db1
+
+post:
+create -> gateway(http POST - token) -> ms(auth - token) -> ms(posts) -> db2
+delete -> gateway(http DELETE - token) -> ms(auth - token) -> ms(posts) -> db2
+
+timeline:
+recent  -> gateway(http GET - token, count)  
+        -> ms(auth - token) 
+        -> ms(auth - my_followers) 
+        -> ms(posts, count) 
+        -> db2
+
+from    -> gateway(http GET - token, user_id) 
+        -> ms(auth - token, user_id) 
+        -> ms(posts) 
+        -> db2 
