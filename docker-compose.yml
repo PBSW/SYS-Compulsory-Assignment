@@ -1,0 +1,22 @@
+version: '3.9'
+
+networks:
+  microservice_net:
+    name: msn
+
+services:
+  Gateway:
+    networks:
+      msn:
+
+  MessageBroker:
+    networks:
+      msn:
+
+  UserService:
+    networks:
+      msn:
+
+  TweetService:
+    networks:
+      msn:
