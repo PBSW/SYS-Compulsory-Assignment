@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using TweetService.Domain;
+using TweetService.Service;
 
 namespace TweetService.API;
 
@@ -8,9 +9,11 @@ namespace TweetService.API;
 [Route("api/tweet")]
 public class TweetController : ControllerBase
 {
-    TweetController()
+    private readonly ITweetService _tweetService;
+    
+    TweetController(ITweetService tweetService)
     {
-        
+        _tweetService = tweetService;
     }
     
     

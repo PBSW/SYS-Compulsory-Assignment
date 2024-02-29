@@ -18,8 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure" />
-    <Folder Include="Service" />
+    <Reference Include="Microsoft.EntityFrameworkCore">
+      <HintPath>..\..\..\..\..\.nuget\packages\microsoft.entityframeworkcore\9.0.0-preview.1.24081.2\lib\net8.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

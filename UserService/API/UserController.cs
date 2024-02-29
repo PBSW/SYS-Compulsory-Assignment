@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UserService.Service;
 
 namespace UserService.API;
 
@@ -6,12 +7,16 @@ namespace UserService.API;
 [Route("api/user")]
 public class UserController : ControllerBase
 {
-    public UserController()
+    private readonly IUserService _userService;
+    
+    public UserController(IUserService userService)
     {
+        _userService = userService;
     }
 
     [HttpGet]
-    public User GetUser()
+    [Route("/{id}")]
+    public User GetUser([FromRoute] int id)
     {
         throw new NotImplementedException();
     }
