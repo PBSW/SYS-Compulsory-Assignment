@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twaddle", "Twaddle\Twaddle\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{EA60F685-D002-4F97-B417-94FE4BBD0AFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{D01402EB-DC8C-4BC0-9E3C-579E7D94A75F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{EA60F685-D002-4F97-B417-94FE4BBD0AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA60F685-D002-4F97-B417-94FE4BBD0AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA60F685-D002-4F97-B417-94FE4BBD0AFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D01402EB-DC8C-4BC0-9E3C-579E7D94A75F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D01402EB-DC8C-4BC0-9E3C-579E7D94A75F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D01402EB-DC8C-4BC0-9E3C-579E7D94A75F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D01402EB-DC8C-4BC0-9E3C-579E7D94A75F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
