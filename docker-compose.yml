@@ -12,7 +12,7 @@ services:
     networks:
       microservice_net:
 
-  messageBroker:
+  message-broker:
     build:
       context: .
       dockerfile: MessageBroker/Dockerfile
@@ -20,14 +20,14 @@ services:
       microservice_net:
       
 
-  userService:
+  user-service:
     build:
       context: .
       dockerfile: UserService/Dockerfile
     networks:
       microservice_net:
 
-  tweetService:
+  tweet-service:
     build:
       context: .
       dockerfile: TweetService/Dockerfile
