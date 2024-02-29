@@ -4,11 +4,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway", "Gateway\Gateway.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBroker", "MessageBroker\MessageBroker.csproj", "{C1CCC1EC-0C1D-4780-934C-F7801879C272}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twaddle", "Twaddle\Twaddle\Twaddle.csproj", "{71964F7F-FC80-4B46-AFD1-E01D0287DA40}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{EA60F685-D002-4F97-B417-94FE4BBD0AFB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{D01402EB-DC8C-4BC0-9E3C-579E7D94A75F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TweetService", "TweetService\TweetService.csproj", "{858A76A1-9604-41DC-A973-6A2D6E557B4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,10 +24,6 @@ Global
 		{C1CCC1EC-0C1D-4780-934C-F7801879C272}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1CCC1EC-0C1D-4780-934C-F7801879C272}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1CCC1EC-0C1D-4780-934C-F7801879C272}.Release|Any CPU.Build.0 = Release|Any CPU
-		{71964F7F-FC80-4B46-AFD1-E01D0287DA40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{71964F7F-FC80-4B46-AFD1-E01D0287DA40}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{71964F7F-FC80-4B46-AFD1-E01D0287DA40}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{71964F7F-FC80-4B46-AFD1-E01D0287DA40}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EA60F685-D002-4F97-B417-94FE4BBD0AFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EA60F685-D002-4F97-B417-94FE4BBD0AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA60F685-D002-4F97-B417-94FE4BBD0AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,5 +32,9 @@ Global
 		{D01402EB-DC8C-4BC0-9E3C-579E7D94A75F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D01402EB-DC8C-4BC0-9E3C-579E7D94A75F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D01402EB-DC8C-4BC0-9E3C-579E7D94A75F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{858A76A1-9604-41DC-A973-6A2D6E557B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{858A76A1-9604-41DC-A973-6A2D6E557B4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{858A76A1-9604-41DC-A973-6A2D6E557B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{858A76A1-9604-41DC-A973-6A2D6E557B4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

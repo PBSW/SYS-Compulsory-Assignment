@@ -6,6 +6,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["MessageBroker/MessageBroker.csproj", "MessageBroker/"]
+COPY ["Shared/Shared.csproj", "Shared/"]
 RUN dotnet restore "MessageBroker/MessageBroker.csproj"
 COPY . .
 WORKDIR "/src/MessageBroker"
