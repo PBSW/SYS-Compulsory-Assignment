@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Shared.User.Dto;
 using UserService.Service;
-using Shared;
 
 namespace UserService.API;
 
+/// <summary>
+/// Api contoller for tweets
+/// </summary>
 [ApiController]
 [Route("api/user")]
 public class UserController : ControllerBase

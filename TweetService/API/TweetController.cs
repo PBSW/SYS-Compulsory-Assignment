@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
-using Shared;
-using TweetService.Domain;
+using Shared.Tweet.Dto;
 using TweetService.Service;
 
 namespace TweetService.API;
 
+/// <summary>
+/// Api contoller for tweets
+/// </summary>
 [ApiController]
 [Route("api/tweet")]
 public class TweetController : ControllerBase

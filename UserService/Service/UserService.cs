@@ -1,4 +1,5 @@
-﻿using UserService.Infrastructure;
+﻿using UserService.Domain;
+using UserService.Infrastructure;
 
 namespace UserService.Service;
 
@@ -12,7 +13,7 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
     
-    
+
     public User Register(User user)
     {
         throw new NotImplementedException();

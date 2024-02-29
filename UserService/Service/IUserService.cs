@@ -1,4 +1,6 @@
-﻿namespace UserService.Service;
+﻿using UserService.Domain;
+
+namespace UserService.Service;
 
 public interface IUserService
 {
