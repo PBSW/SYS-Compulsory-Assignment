@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UserService.Service;
+using Shared;
 
 namespace UserService.API;
 
@@ -16,53 +17,53 @@ public class UserController : ControllerBase
 
     [HttpGet]
     [Route("/{id}")]
-    public User GetUser([FromRoute] int id)
+    public ActionResult<UserDTO> GetUser([FromRoute] int id)
     {
         throw new NotImplementedException();
     }
 
     [HttpPut]
-    public User UpdateUser(User user)
+    public ActionResult<UserDTO> UpdateUser(UserUpdate user)
     {
         throw new NotImplementedException();
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public User DeleteUser([FromRoute] int id)
+    public ActionResult DeleteUser([FromRoute] int id)
     {
         throw new NotImplementedException();
     }
 
     [HttpPost]
-    public User Login(User user)
+    public ActionResult<UserAuth> Login(UserLogin user)
     {
         throw new NotImplementedException();
     }
 
     [HttpPost]
-    public User Register(User user)
+    public ActionResult<UserAuth> Register(UserRegister user)
     {
         throw new NotImplementedException();
     }
 
     [HttpGet]
     [Route("{id}/following")]
-    public IEnumerable<User> GetFollowers([FromRoute] int id)
+    public ActionResult<IEnumerable<UserDTO>> GetFollowers([FromRoute] int id)
     {
         throw new NotImplementedException();
     }
 
     [HttpPost]
     [Route("{id}/follow/{followId}")]
-    public User FollowUser([FromRoute] int id, [FromRoute] int followId)
+    public ActionResult FollowUser([FromRoute] int id, [FromRoute] int followId)
     {
         throw new NotImplementedException();
     }
     
     [HttpPost]
     [Route("{id}/unfollow/{unfollowId}")]
-    public User UnfollowUser([FromRoute] int id, [FromRoute] int unfollowId)
+    public ActionResult UnfollowUser([FromRoute] int id, [FromRoute] int unfollowId)
     {
         throw new NotImplementedException();
     }
