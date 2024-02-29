@@ -5,18 +5,31 @@ networks:
     name: msn
 
 services:
-  Gateway:
+  gateway:
+    build:
+      context: .
+      dockerfile: Gateway/Dockerfile
     networks:
-      msn:
+      microservice_net:
 
-  MessageBroker:
+  messageBroker:
+    build:
+      context: .
+      dockerfile: MessageBroker/Dockerfile
     networks:
-      msn:
+      microservice_net:
+      
 
-  UserService:
+  userService:
+    build:
+      context: .
+      dockerfile: UserService/Dockerfile
     networks:
-      msn:
+      microservice_net:
 
-  TweetService:
+  tweetService:
+    build:
+      context: .
+      dockerfile: TweetService/Dockerfile
     networks:
-      msn:
+      microservice_net:
