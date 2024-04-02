@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using UserService.Domain;
 
 namespace UserService.Infrastructure;
 

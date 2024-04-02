@@ -1,4 +1,6 @@
-﻿namespace UserService.Infrastructure;
+﻿using UserService.Domain;
+
+namespace UserService.Infrastructure;
 
 public interface IUserRepository
 {
