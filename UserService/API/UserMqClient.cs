@@ -1,6 +1,7 @@
 ﻿using EasyNetQ;
 using Shared.Messages;
 using Shared.User.Dto;
+using UserService.Domain;
 using UserService.Service;
 
 namespace UserService.API;
@@ -22,14 +23,14 @@ public class UserMqClient : BackgroundService
      */
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _bus.PubSub.SubscribeAsync<UserRegister>("user/register",  message => Register(message), stoppingToken);   
-        _bus.PubSub.SubscribeAsync<UserIdMessage>("user/get",  message => GetUser(message), stoppingToken);   
-        _bus.PubSub.SubscribeAsync<UserUpdate>("user/update",  message => UpdateUser(message), stoppingToken);   
-        _bus.PubSub.SubscribeAsync<UserIdMessage>("user/delete",  message => DeleteUser(message), stoppingToken);   
-        _bus.PubSub.SubscribeAsync<UserLogin>("user/login",  message => Login(message), stoppingToken);
-        _bus.PubSub.SubscribeAsync<DoubleIdMessage>("user/follow",  FollowUser, stoppingToken);
-        _bus.PubSub.SubscribeAsync<DoubleIdMessage>("user/unfollow",  UnfollowUser, stoppingToken);
-        _bus.PubSub.SubscribeAsync<UserIdMessage>("user/all-followers",  message => GetFollowers(message), stoppingToken);
+        _bus.PubSub.SubscribeAsync<UserRegister>("user/req/register",  message => Register(message), stoppingToken);   
+        _bus.PubSub.SubscribeAsync<UserIdMessage>("user/req/get",  message => GetUser(message), stoppingToken);   
+        _bus.PubSub.SubscribeAsync<UserUpdate>("user/req/update",  message => UpdateUser(message), stoppingToken);   
+        _bus.PubSub.SubscribeAsync<UserIdMessage>("user/req/delete",  message => DeleteUser(message), stoppingToken);   
+        _bus.PubSub.SubscribeAsync<UserLogin>("user/req/login",  message => Login(message), stoppingToken);
+        _bus.PubSub.SubscribeAsync<DoubleIdMessage>("user/req/follow",  FollowUser, stoppingToken);
+        _bus.PubSub.SubscribeAsync<DoubleIdMessage>("user/req/unfollow",  UnfollowUser, stoppingToken);
+        _bus.PubSub.SubscribeAsync<UserIdMessage>("user/req/all-followers",  message => GetFollowers(message), stoppingToken);
         
         return Task.CompletedTask;    
     }
@@ -37,22 +38,45 @@ public class UserMqClient : BackgroundService
     
     
     //[Route("/{id}")]
-    public UserDTO GetUser(UserIdMessage message)
+    public void GetUser(UserIdMessage message)
     {
         var userId = message.UserId;
+        var user = _userService.GetUser(userId);
         
-        throw new NotImplementedException();
+        var dto = new UserDTO()
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Username = user.Username,
+            Bio = user.Bio,
+            ProfilePicture = user.ProfilePicture
+        };
+        
+        SendMessage(dto, "user/res/user");
     }
     
-    public UserDTO UpdateUser(UserUpdate user)
+    public void UpdateUser(UserUpdate user)
     {
-        throw new NotImplementedException();
+        var updatedUser = _userService.UpdateUser(user);
+        
+        var dto = new UserDTO()
+        {
+            Id = updatedUser.Id,
+            Email = updatedUser.Email,
+            Username = updatedUser.Username,
+            Bio = updatedUser.Bio,
+            ProfilePicture = updatedUser.ProfilePicture
+        };
+        
+        SendMessage(dto, "user/res/update");
     }
 
     //[Route("{id}")]
     public void DeleteUser(UserIdMessage id)
     {
-        throw new NotImplementedException();
+        var userId = id.UserId;
+        
+        _userService.DeleteUser(userId);
     }
     
     public UserAuth Login(UserLogin user)
@@ -70,6 +94,8 @@ public class UserMqClient : BackgroundService
     {
         var userId = message.UserId;
         
+        var followers = _userService.GetFollowers(userId);
+        
         throw new NotImplementedException();
     }
 
@@ -79,7 +105,7 @@ public class UserMqClient : BackgroundService
         var userId = message.Id1;
         var unfollowId = message.Id2;
 
-        throw new NotImplementedException();
+        _userService.FollowUser(userId, unfollowId);
     }
     
     //[Route("{id}/unfollow/{unfollowId}")]
@@ -88,13 +114,12 @@ public class UserMqClient : BackgroundService
         var userId = message.Id1;
         var unfollowId = message.Id2;
         
-        throw new NotImplementedException();
+        _userService.UnfollowUser(userId, unfollowId);
     }
     
     
     public void SendMessage(IInfrastructureMessage message, string topic)
     {
-
-        _bus.PubSub.PublishAsync(message);
+        _bus.PubSub.PublishAsync(message, topic);
     }
 }
