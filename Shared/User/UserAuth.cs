@@ -1,9 +1,11 @@
+using Shared.Messages;
+
 namespace Shared.User.Dto;
 
 /// <summary>
 /// DTO for getting authentication details when logged in
 /// </summary>
-public class UserAuth 
+public class UserAuth : IInfrastructureMessage
 {
     /// <summary>
     /// The user id
@@ -19,4 +21,6 @@ public class UserAuth
     /// A UTC timestamp of when this token expires
     /// </summary>
     public int Expires { get; set; }
+
+    public Dictionary<string, string> Headers { get; set; }
 }

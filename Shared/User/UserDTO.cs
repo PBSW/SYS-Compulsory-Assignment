@@ -1,9 +1,11 @@
-﻿namespace Shared.User.Dto;
+﻿using Shared.Messages;
+
+namespace Shared.User.Dto;
 
 /// <summary>
 /// DTO for displaying User information
 /// </summary>
-public class UserDTO
+public class UserDTO : IInfrastructureMessage
 {
     /// <summary>
     /// The id of the user
@@ -28,5 +30,7 @@ public class UserDTO
     /// <summary>
     /// A link to the users profile picture
     /// </summary>
-    public string? ProfilePicture { get; set; }   
+    public string? ProfilePicture { get; set; }
+
+    public Dictionary<string, string> Headers { get; set; }
 }

@@ -1,9 +1,11 @@
+using Shared.Messages;
+
 namespace Shared.User.Dto;
 
 /// <summary>
 /// DTO for editing a user profile
 /// </summary>
-public class UserUpdate 
+public class UserUpdate : IInfrastructureMessage
 {
     /// <summary>
     /// the users new handle 
@@ -24,4 +26,6 @@ public class UserUpdate
     /// The new profile picture of the user
     /// </summary>
     public string? ProfilePicture { get; set; }
+
+    public Dictionary<string, string> Headers { get; set; }
 }
