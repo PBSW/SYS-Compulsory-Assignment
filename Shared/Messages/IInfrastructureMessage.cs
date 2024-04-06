@@ -2,5 +2,5 @@
 
 public interface IInfrastructureMessage
 {
-    Dictionary<string, string> Headers { get; set; }
+    Dictionary<string, string> Headers { get; set; } 
 }

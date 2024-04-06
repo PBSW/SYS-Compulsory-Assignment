@@ -10,7 +10,7 @@ public class UserDTO : IInfrastructureMessage
     /// <summary>
     /// The id of the user
     /// </summary>
-    public ulong Id { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     /// The displayname or handle of the user

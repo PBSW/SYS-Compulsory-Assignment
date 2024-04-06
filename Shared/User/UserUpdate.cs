@@ -5,8 +5,11 @@ namespace Shared.User.Dto;
 /// <summary>
 /// DTO for editing a user profile
 /// </summary>
-public class UserUpdate : IInfrastructureMessage
+public class UserUpdate
 {
+    
+    public int UserId { get; set; }
+    
     /// <summary>
     /// the users new handle 
     /// </summary>
@@ -27,5 +30,4 @@ public class UserUpdate : IInfrastructureMessage
     /// </summary>
     public string? ProfilePicture { get; set; }
 
-    public Dictionary<string, string> Headers { get; set; }
 }

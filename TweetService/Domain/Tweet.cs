@@ -8,7 +8,7 @@ public class Tweet
     /// <summary>
     /// The id of the tweet
     /// </summary>
-    public ulong Id { get; set; }
+    public int Id { get; set; }
     
     /// <summary>
     /// The text content of the tweet

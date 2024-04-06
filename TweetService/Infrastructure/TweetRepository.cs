@@ -13,31 +13,49 @@ public class TweetRepository : ITweetRepository
     
     public IEnumerable<Tweet> AllFrom(ulong id)
     {
-        throw new NotImplementedException();
+        var tweets = _context.Tweets.Where(t => t.AuthorId == id);
+        return tweets;
     }
 
     public IEnumerable<Tweet> AllRecent(IEnumerable<ulong> ids, int fromUtc, int toUtc)
     {
-        throw new NotImplementedException();
+        DateTime from = DateTime.UnixEpoch.AddSeconds(fromUtc);
+        DateTime to = DateTime.UnixEpoch.AddSeconds(toUtc);
+        
+        var tweets = _context.Tweets.Where(t => ids.Contains(t.AuthorId) && t.CreatedAt >= from && t.CreatedAt <= to);
+        return tweets;
     }
 
     public Tweet Create(Tweet tweet)
     {
-        throw new NotImplementedException();
+        _context.Tweets.Add(tweet);
+        _context.SaveChanges();
+        return tweet;
     }
 
     public bool Delete(int id)
     {
-        throw new NotImplementedException();
+        var tweet = _context.Tweets.Find(id);
+        if (tweet == null)
+        {
+            return false;
+        }
+        
+        _context.Tweets.Remove(tweet);
+        _context.SaveChanges();
+        return true;
     }
 
     public Tweet Single(int id)
     {
-        throw new NotImplementedException();
+        var tweet = _context.Tweets.Find(id);
+        return tweet;
     }
 
     public Tweet Update(Tweet tweet)
     {
-        throw new NotImplementedException();
+        _context.Tweets.Update(tweet);
+        _context.SaveChanges();
+        return tweet;
     }
 }

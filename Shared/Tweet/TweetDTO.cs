@@ -8,7 +8,7 @@ public class TweetDTO
     /// <summary>
     /// The id of the tweet
     /// </summary>
-    public ulong Id { get; set; }
+    public int Id { get; set; }
     
     /// <summary>
     /// The user id of the tweet creator

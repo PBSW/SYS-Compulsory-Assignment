@@ -8,7 +8,7 @@ public class User
     /// <summary>
     /// The id of the user
     /// </summary>
-    public ulong Id { get; set; }
+    public int Id { get; set; }
     
     /// <summary>
     /// The handle of the user
@@ -38,12 +38,12 @@ public class User
     /// <summary>
     /// The current active access token  
     /// </summary>
-    public string Token { get; set; } = null!;
+    public string? Token { get; set; } = null!;
     
     /// <summary>
     /// The UTC timestamp of when the token is no longer valid
     /// </summary>
-    public int? TokenExpire { get; set; }
+    public DateTime? TokenExpire { get; set; }
 
     /// <summary>
     /// List of other users that this one follows
