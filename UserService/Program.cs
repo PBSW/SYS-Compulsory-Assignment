@@ -1,5 +1,7 @@
 using EasyNetQ;
 using UserService.API;
+using UserService.Service;
+using UserService.Service.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +12,14 @@ builder.Services.AddSwaggerGen();
 
 //TODO
 var bus = RabbitHutch.CreateBus("host=rabbitmq;port=5672;virtualHost=/;username=guest;password=guest");
-builder.Services.AddHostedService<UserMqClient>();
+builder.Services.AddSingleton(bus);
+builder.Services.AddHostedService<MessageHandler>();
+
+DependencyResolver.RegisterServices(builder.Services);
+
+builder.Services.AddControllers();
+
+
 
 
 

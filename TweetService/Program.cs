@@ -1,3 +1,7 @@
+using EasyNetQ;
+using TweetService.Service;
+using UserService.Service.RabbitMQ;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//TODO
+var bus = RabbitHutch.CreateBus("host=rabbitmq;port=5672;virtualHost=/;username=guest;password=guest");
+builder.Services.AddSingleton(bus);
+builder.Services.AddHostedService<MessageHandler>();
+
+DependencyResolver.RegisterServices(builder.Services);
+
+builder.Services.AddControllers();
 
 
 var app = builder.Build();
@@ -16,7 +28,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 
 app.MapControllers().WithOpenApi();
 
