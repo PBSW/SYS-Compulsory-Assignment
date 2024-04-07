@@ -14,12 +14,12 @@ public class TweetService : ITweetService
 
     public Tweet Post(Tweet tweet)
     {
-        throw new NotImplementedException();
+        _tweetRepository.Create(tweet);
     }
 
     public IEnumerable<Tweet> GetTweetsFromUser(int user_id)
     {
-        throw new NotImplementedException();
+        return _tweetRepository.AllFrom(user_id);
     }
 
     public IEnumerable<Tweet> GetRecentTweets(int uid, int fromUtc, int toUtc)
