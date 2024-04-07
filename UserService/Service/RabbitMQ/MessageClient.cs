@@ -15,4 +15,9 @@ public class MessageClient
     {
         _bus.PubSub.Subscribe(topic, handler);
     }
+    
+    public void Publish<T>(T message, string topic)
+    {
+        _bus.PubSub.Publish(message, topic);
+    }
 }

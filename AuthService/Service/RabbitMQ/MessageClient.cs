@@ -1,6 +1,6 @@
 ﻿using EasyNetQ;
 
-namespace UserService.Service.RabbitMQ;
+namespace AuthService.Service.RabbitMQ;
 
 public class MessageClient
 {

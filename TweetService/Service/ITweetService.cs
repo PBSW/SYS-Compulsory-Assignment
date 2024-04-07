@@ -6,6 +6,6 @@ public interface ITweetService
 {
     public Tweet Post(Tweet tweet);
     public IEnumerable<Tweet> GetTweetsFromUser(int user_id);
-    public IEnumerable<Tweet> GetRecentTweets(int uid, int fromUtc, int toUtc);
-    public Tweet Delete(int id);
+    public IEnumerable<Tweet> GetRecentTweets(int uid, DateTime fromUtc, DateTime toUtc);
+    public bool Delete(int id);
 }

@@ -18,7 +18,7 @@ public class Tweet
     /// <summary>
     /// The id of the user who created this tweet
     /// </summary>
-    public ulong AuthorId { get; set; }
+    public int AuthorId { get; set; }
 
     /// <summary>
     /// The timestamp of when this tweet was created

@@ -11,17 +11,14 @@ public class TweetRepository : ITweetRepository
         _context = context;
     }
     
-    public IEnumerable<Tweet> AllFrom(ulong id)
+    public IEnumerable<Tweet> AllFrom(int id)
     {
         var tweets = _context.Tweets.Where(t => t.AuthorId == id);
         return tweets;
     }
 
-    public IEnumerable<Tweet> AllRecent(IEnumerable<ulong> ids, int fromUtc, int toUtc)
+    public IEnumerable<Tweet> AllRecent(IEnumerable<int> ids, DateTime from, DateTime to)
     {
-        DateTime from = DateTime.UnixEpoch.AddSeconds(fromUtc);
-        DateTime to = DateTime.UnixEpoch.AddSeconds(toUtc);
-        
         var tweets = _context.Tweets.Where(t => ids.Contains(t.AuthorId) && t.CreatedAt >= from && t.CreatedAt <= to);
         return tweets;
     }

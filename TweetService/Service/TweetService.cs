@@ -14,7 +14,7 @@ public class TweetService : ITweetService
 
     public Tweet Post(Tweet tweet)
     {
-        _tweetRepository.Create(tweet);
+        return _tweetRepository.Create(tweet);
     }
 
     public IEnumerable<Tweet> GetTweetsFromUser(int user_id)
@@ -22,13 +22,14 @@ public class TweetService : ITweetService
         return _tweetRepository.AllFrom(user_id);
     }
 
-    public IEnumerable<Tweet> GetRecentTweets(int uid, int fromUtc, int toUtc)
+    public IEnumerable<Tweet> GetRecentTweets(int uid, DateTime from, DateTime to)
     {
-        throw new NotImplementedException();
+        return _tweetRepository.AllRecent(new List<int> { uid }, from, to);
     }
 
-    public Tweet Delete(int id)
+
+    public bool Delete(int id)
     {
-        throw new NotImplementedException();
+        return _tweetRepository.Delete(id);
     }
 }
