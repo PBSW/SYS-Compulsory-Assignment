@@ -11,6 +11,5 @@ public class DependencyResolver
     {
         serviceCollection.AddTransient<IUserService, IUserService>();
         serviceCollection.AddTransient<IUserRepository, UserRepository>();
-        serviceCollection.AddTransient<IAuthService, AuthService>();
     }
 }

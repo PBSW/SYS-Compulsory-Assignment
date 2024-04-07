@@ -1,4 +1,4 @@
-﻿namespace UserService.Domain;
+﻿namespace Shared.Domain;
 
 /// <summary>
 /// The full structure of a User account

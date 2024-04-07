@@ -1,4 +1,4 @@
-﻿using TweetService.Domain;
+﻿using Shared.Domain;
 using TweetService.Infrastructure;
 
 namespace TweetService.Service;
@@ -27,9 +27,9 @@ public class TweetService : ITweetService
         return _tweetRepository.AllRecent(new List<int> { uid }, from, to);
     }
 
-
     public bool Delete(int id)
     {
         return _tweetRepository.Delete(id);
     }
+    
 }

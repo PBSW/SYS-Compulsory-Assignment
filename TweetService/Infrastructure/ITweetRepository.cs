@@ -1,5 +1,4 @@
-﻿using TweetService.Domain;
-
+﻿using Shared.Domain;
 namespace TweetService.Infrastructure;
 
 public interface ITweetRepository

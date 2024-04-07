@@ -1,4 +1,4 @@
-﻿namespace TweetService.Domain;
+﻿namespace Shared.Domain;
 
 /// <summary>
 /// The full data structure of a tweet
@@ -28,7 +28,7 @@ public class Tweet
     /// <summary>
     /// A list of user ids of everyone who has liked this tweet
     /// </summary>
-    public List<ulong> Likes { get; set; } = [];
+    public List<int> Likes { get; set; } = [];
 
     /// <summary>
     /// A list of comments to this tweet

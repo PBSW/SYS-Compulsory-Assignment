@@ -1,24 +1,29 @@
 ﻿using Shared.User.Dto;
-using UserService.Domain;
+using Shared.Domain;
 
 namespace UserService.Service;
 
 public interface IUserService
 {
-    public User Register(User user);
+    public Task<User> Register(User user);
     
-    public User Login(User user);
+    public Task<User> Login(User user);
     
-    public User GetUser(int userId);
+    public Task<User> GetUser(int userId);
     
-    public User UpdateUser(UserUpdate user);
+    public Task<User> UpdateUser(UserUpdate user);
     
-    public void DeleteUser(int userId);
+    public Task DeleteUser(int userId);
     
-    public void FollowUser(int userId, int followId);
+    public Task FollowUser(int userId, int followId);
     
-    public void UnfollowUser(int userId, int unfollowId);
+    public Task UnfollowUser(int userId, int unfollowId);
     
-    public IEnumerable<User> GetFollowers(int userId);
+    public Task<IEnumerable<User>> GetFollowers(int userId);
+
+    public Task<string> HashPassword(string password);
     
+    public Task<bool> VerifyPassword(string password, string hash);
+    
+
 }

@@ -2,12 +2,14 @@
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Util;
 
 
 namespace AuthService.Service;
 
-public class AuthService(string secretKey) : IAuthService
+public class AuthService(string secretKey, IPasswordHasher passwordHasher) : IAuthService
 {
+    
     public bool ValidateToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -58,12 +60,12 @@ public class AuthService(string secretKey) : IAuthService
 
     public string HashPassword(string password)
     {
-        return Convert.ToBase64String(Encoding.UTF8.GetBytes(password));
+        return passwordHasher.Hash(password);
     }
 
     public bool VerifyPassword(string password, string hash)
     {
-        return HashPassword(password) == hash;
+        return passwordHasher.Hash(password) == hash;
     }
 
     private TokenValidationParameters GetValidationParameters()

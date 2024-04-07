@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shared.Tweet.Dto;
+using Shared.User.Dto;
 using TweetService.Service;
 
 namespace TweetService.API;
@@ -20,14 +21,14 @@ public class TweetController : ControllerBase
     
     [HttpGet]
     [Route("{user_id}")]
-    public ActionResult<IEnumerable<TweetDTO>> GetTweetsFromUser([FromBody] int user_id)
+    public Task<ActionResult<IEnumerable<TweetDTO>>> GetTweetsFromUser([FromBody] int user_id)
     {
         throw new NotImplementedException();
     }
     
     [HttpGet]
     [Route("{uid}/Recent")]
-    public ActionResult<IEnumerable<TweetDTO>> GetRecentTweets([FromRoute] int uid, 
+    public Task<ActionResult<IEnumerable<TweetDTO>>> GetRecentTweets([FromRoute] int uid, 
         [FromQuery] int fromUtc, [FromQuery] int toUtc)
     {
         throw new NotImplementedException();
@@ -35,17 +36,19 @@ public class TweetController : ControllerBase
     
     
     [HttpPost]
-    public ActionResult<TweetDTO> PostTweet(TweetCreate tweet)
+    public Task<ActionResult<TweetDTO>> PostTweet(TweetCreate tweet)
     {
         throw new NotImplementedException();
     }
     
     [HttpDelete]
     [Route("{id}")]
-    public ActionResult DeleteTweet([FromRoute] int id)
+    public Task<ActionResult> DeleteTweet([FromRoute] int id)
     {
         throw new NotImplementedException();
     }
+    
+    
     
        
 }

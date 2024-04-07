@@ -1,4 +1,5 @@
 ﻿using AuthService.Service;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UserService.API;
@@ -18,9 +19,14 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost ("Login")]
-    public async Task<IActionResult> Login([FromBody] string userDto)
+    public async Task<IActionResult> Login([FromBody] UserLoginInfo dto)
     {
         return Ok();
+        /**
+         * Flow:
+         * HttpClient to UserService to verify credentials/password
+         * If valid, generate token and return it
+         */
     }
     
     //Validate token

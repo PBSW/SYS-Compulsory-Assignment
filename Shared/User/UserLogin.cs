@@ -5,7 +5,7 @@ namespace Shared.User.Dto;
 /// <summary>
 /// DTO for logging in a user
 /// </summary>
-public class UserLogin : IInfrastructureMessage
+public class UserLogin 
 {
     /// <summary>
     /// The email of the user
@@ -16,6 +16,4 @@ public class UserLogin : IInfrastructureMessage
     /// The hashed password of the user
     /// </summary>
     public string? Password { get; set; }
-
-    public Dictionary<string, string> Headers { get; set; }
 }

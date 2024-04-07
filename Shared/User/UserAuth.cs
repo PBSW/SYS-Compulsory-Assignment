@@ -5,7 +5,7 @@ namespace Shared.User.Dto;
 /// <summary>
 /// DTO for getting authentication details when logged in
 /// </summary>
-public class UserAuth : IInfrastructureMessage
+public class UserAuth
 {
     /// <summary>
     /// The user id
@@ -22,5 +22,4 @@ public class UserAuth : IInfrastructureMessage
     /// </summary>
     public int Expires { get; set; }
 
-    public Dictionary<string, string> Headers { get; set; }
 }

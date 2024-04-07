@@ -1,6 +1,11 @@
-﻿using Shared.User.Dto;
-using UserService.Domain;
+﻿using System.Text;
+using EasyNetQ;
+using Shared.User.Dto;
+using Shared.Domain;
+using Shared.Messages.AuthMessages;
+using Shared.Util;
 using UserService.Infrastructure;
+using UserService.Service.RabbitMQ;
 
 namespace UserService.Service;
 
@@ -8,29 +13,31 @@ public class UserService : IUserService
 {
     
     private readonly IUserRepository _userRepository;
-    private readonly IAuthService _authService;
+    private readonly MessageClient _messageClient;
+    private readonly IBus _bus;
+    private readonly IPasswordHasher _passwordHasher;
     
-    public UserService(IUserRepository userRepository)
+    public UserService(IUserRepository userRepository, IBus bus, IPasswordHasher passwordHasher)
     {
         _userRepository = userRepository;
+        _bus = bus;
+        _passwordHasher = passwordHasher;
+        _messageClient = new MessageClient(_bus);
     }
     
 
-    public User Register(User user)
+    public async Task<User> Register(User user)
     {
         //Write to database
         
-        user.Password = _authService.HashPassword(user.Password);
+        user.Password = await HashPassword(user.Password);
         
         var created = _userRepository.Create(user);
         
-        created.Token = _authService.GenerateToken(user.Id);
-        created.TokenExpire = DateTime.Now.AddHours(1);
-        
-        return _userRepository.Update(user);
+        return created;
     }
 
-    public User Login(User user)
+    public async Task<User> Login(User user)
     {
         var dbUser = _userRepository.All().FirstOrDefault(u => u.Username == user.Username);
         
@@ -38,24 +45,32 @@ public class UserService : IUserService
         {
             throw new Exception("User not found");
         }
+
+        var verified = await VerifyPassword(user.Password, dbUser.Password); 
         
-        if (!_authService.VerifyPassword(user.Password, dbUser.Password))
+        if (!verified)
         {
             throw new Exception("Invalid password");
         }
+
+
+        var message = new CreateTokenMessage()
+        {
+            UserId = dbUser.Id,
+            Expiration = DateTime.Now.AddHours(1)
+        };
         
-        dbUser.Token = _authService.GenerateToken(dbUser.Id);
-        dbUser.TokenExpire = DateTime.Now.AddHours(1);
+        _messageClient.Publish(message, "Auth");
         
         return _userRepository.Update(user);
     }
     
-    public User GetUser(int userId)
+    public async Task<User> GetUser(int userId)
     {
         return _userRepository.Single(userId);
     }
 
-    public User UpdateUser(UserUpdate user)
+    public async Task<User> UpdateUser(UserUpdate user)
     {
         var dbUser = _userRepository.Single(user.UserId);
         
@@ -82,12 +97,12 @@ public class UserService : IUserService
         return _userRepository.Update(dbUser);
     }
 
-    public void DeleteUser(int userId)
+    public async Task DeleteUser(int userId)
     {
         _userRepository.Delete(userId);
     }
 
-    public void FollowUser(int userId, int followId)
+    public async Task FollowUser(int userId, int followId)
     {
         //Get user from database
         //Get followId from database
@@ -105,7 +120,7 @@ public class UserService : IUserService
         _userRepository.Update(follow);
     }
 
-    public void UnfollowUser(int userId, int unfollowId)
+    public async Task UnfollowUser(int userId, int unfollowId)
     {
         //Get user from database
         //Get unfollowId from database
@@ -123,12 +138,23 @@ public class UserService : IUserService
         _userRepository.Update(unfollow);
     }
 
-    public IEnumerable<User> GetFollowers(int userId)
+    public async Task<IEnumerable<User>> GetFollowers(int userId)
     {
         //Get user from database
         var user = _userRepository.Single(userId);
         
         //Return user's followers
         return user.Followers;
+    }
+    
+    
+    public async Task<string> HashPassword(string password)
+    {
+        return _passwordHasher.Hash(password);
+    }
+
+    public async Task<bool> VerifyPassword(string password, string hash)
+    {
+        return await HashPassword(password) == hash;
     }
 }

@@ -5,7 +5,7 @@ namespace Shared.User.Dto;
 /// <summary>
 /// DTO for displaying User information
 /// </summary>
-public class UserDTO : IInfrastructureMessage
+public class UserDTO 
 {
     /// <summary>
     /// The id of the user

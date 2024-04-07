@@ -1,0 +1,58 @@
+﻿{
+  "Routes": [ 
+    {
+      "UpstreamPathTemplate": "/ping",
+      "UpstreamHttpMethod": ["Get"],
+      "DownstreamPathTemplate": "/pingservice",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pingservice",
+          "Port": 80
+        }
+      ],
+      "Key": "ping",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": ["ping.read"]
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/pong",
+      "UpstreamHttpMethod": ["Get"],
+      "DownstreamPathTemplate": "/pongservice",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pongservice",
+          "Port": 80
+        }
+      ],
+      "Key": "pong",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "pong.read"
+        ]
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/auth",
+      "UpstreamHttpMethod": ["Post"],
+      "DownstreamPathTemplate": "/authservice",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 80
+        }
+      ]
+    }
+  ],
+  "Aggregates": [
+    {
+      "UpstreamPathTemplate": "/pingpong",
+      "RouteKeys": ["ping", "pong"]
+    }
+  ]
+}

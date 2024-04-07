@@ -20,54 +20,63 @@ public class UserController : ControllerBase
 
     [HttpGet]
     [Route("/{id}")]
-    public ActionResult<UserDTO> GetUser([FromRoute] int id)
+    public Task<ActionResult<UserDTO>> GetUser([FromRoute] int id)
     {
         throw new NotImplementedException();
     }
 
     [HttpPut]
-    public ActionResult<UserDTO> UpdateUser(UserUpdate user)
+    public Task<ActionResult<UserDTO>> UpdateUser(UserUpdate user)
     {
         throw new NotImplementedException();
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public ActionResult DeleteUser([FromRoute] int id)
+    public Task<ActionResult> DeleteUser([FromRoute] int id)
     {
         throw new NotImplementedException();
     }
 
     [HttpPost]
-    public ActionResult<UserAuth> Login(UserLogin user)
+    public Task<ActionResult<UserAuth>> Login(UserLogin user)
     {
-        throw new NotImplementedException();
+        _userService.VerifyUser(user);
     }
 
     [HttpPost]
-    public ActionResult<UserAuth> Register(UserRegister user)
+    public Task<ActionResult<UserAuth>> Register(UserRegister user)
     {
-        throw new NotImplementedException();
+        _userService.Register(user);
     }
 
     [HttpGet]
     [Route("{id}/following")]
-    public ActionResult<IEnumerable<UserDTO>> GetFollowers([FromRoute] int id)
+    public Task<ActionResult<IEnumerable<UserDTO>>> GetFollowers([FromRoute] int id)
     {
         throw new NotImplementedException();
     }
 
     [HttpPost]
     [Route("{id}/follow/{followId}")]
-    public ActionResult FollowUser([FromRoute] int id, [FromRoute] int followId)
+    public Task<ActionResult> FollowUser([FromRoute] int id, [FromRoute] int followId)
     {
         throw new NotImplementedException();
     }
     
     [HttpPost]
     [Route("{id}/unfollow/{unfollowId}")]
-    public ActionResult UnfollowUser([FromRoute] int id, [FromRoute] int unfollowId)
+    public async Task<ActionResult> UnfollowUser([FromRoute] int id, [FromRoute] int unfollowId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            await _userService.UnfollowUser(id, unfollowId);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

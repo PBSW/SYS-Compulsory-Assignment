@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TweetService.Domain;
+using Shared.Domain;
 
 namespace TweetService.Infrastructure;
 
@@ -30,7 +30,7 @@ public class DatabaseContext : DbContext
             .Property(t => t.Likes)
             .HasConversion(
                 v => string.Join(',', v),
-                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(ulong.Parse).ToList()
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList()
             );
     }
     

@@ -1,35 +1,60 @@
 version: '3.9'
 
-networks:
-  microservice_net:
-    name: msn
 
 services:
   gateway:
     build:
       context: .
       dockerfile: Gateway/Dockerfile
-    networks:
-      microservice_net:
+    ports:
+      - 8082:80
 
-  message-broker:
+
+  auth-service:
     build:
       context: .
-      dockerfile: MessageBroker/Dockerfile
-    networks:
-      microservice_net:
-      
-
+      dockerfile: AuthService/Dockerfile
+    ports:
+      - 8081:80
+    depends_on:
+      gateway:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+  
+  
   user-service:
     build:
       context: .
       dockerfile: UserService/Dockerfile
-    networks:
-      microservice_net:
-
+    ports:
+      - 8083:80
+    depends_on:
+      gateway:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+  
   tweet-service:
     build:
       context: .
       dockerfile: TweetService/Dockerfile
-    networks:
-      microservice_net:
+    ports:
+      - 8084:80
+    depends_on:
+      gateway:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+  
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    ports:
+      - "5672:5672"
+      - "15672:15672"

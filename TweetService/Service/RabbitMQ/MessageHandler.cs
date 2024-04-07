@@ -1,5 +1,5 @@
 ﻿using EasyNetQ;
-using TweetService.Domain;
+using Shared.Domain;
 using TweetService.Service;
 
 namespace UserService.Service.RabbitMQ;

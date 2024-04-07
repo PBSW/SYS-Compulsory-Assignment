@@ -5,7 +5,7 @@ namespace Shared.User.Dto;
 /// <summary>
 /// DTO for creating a new user account 
 /// </summary>
-public class UserRegister : IInfrastructureMessage 
+public class UserRegister 
 {
     /// <summary>
     /// The email of the new user

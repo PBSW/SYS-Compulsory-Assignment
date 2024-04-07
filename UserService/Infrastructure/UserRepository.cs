@@ -1,4 +1,4 @@
-﻿using UserService.Domain;
+﻿using Shared.Domain;
 
 namespace UserService.Infrastructure;
 
