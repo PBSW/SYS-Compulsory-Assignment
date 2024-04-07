@@ -1,6 +1,5 @@
 ﻿using AuthService.Service;
 using Microsoft.AspNetCore.Mvc;
-using UserService.Service;
 
 namespace UserService.API;
 
