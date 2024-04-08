@@ -58,3 +58,43 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+
+
+  user-sql:
+    container_name: MySQL-user
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db
+      MYSQL_USER: database_user
+      MYSQL_PASSWORD: Password1!
+    ports:
+      - '3306:3306'
+    ulimits:
+      nofile: # Fix memory leak issue on some systems when LimitCORE=infinity (containerd) [https://github.com/docker-library/mysql/issues/873]
+        soft: 1048576
+        hard: 1048576
+    volumes:
+      - user-service-vol:/var/lib/mysql
+  
+  tweet-sql:
+    container_name: MySQL-tweet
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db
+      MYSQL_USER: database_user
+      MYSQL_PASSWORD: Password1!
+    ports:
+      - '3306:3306'
+    ulimits:
+      nofile: # Fix memory leak issue on some systems when LimitCORE=infinity (containerd) [https://github.com/docker-library/mysql/issues/873]
+        soft: 1048576
+        hard: 1048576
+    volumes:
+      - tweet-service-vol:/var/lib/mysql
+  
+  
+volumes:
+    tweet-service-vol:
+    user-service-vol:
