@@ -5,8 +5,6 @@ namespace UserService.Service;
 
 public interface IUserService
 {
-    public Task<User> Register(User user);
-    
     public Task<User> Login(User user);
     
     public Task<User> GetUser(int userId);

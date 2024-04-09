@@ -38,18 +38,6 @@ public class UserController : ControllerBase
         throw new NotImplementedException();
     }
 
-    [HttpPost]
-    public Task<ActionResult<UserAuth>> Login(UserLogin user)
-    {
-        _userService.VerifyUser(user);
-    }
-
-    [HttpPost]
-    public Task<ActionResult<UserAuth>> Register(UserRegister user)
-    {
-        _userService.Register(user);
-    }
-
     [HttpGet]
     [Route("{id}/following")]
     public Task<ActionResult<IEnumerable<UserDTO>>> GetFollowers([FromRoute] int id)

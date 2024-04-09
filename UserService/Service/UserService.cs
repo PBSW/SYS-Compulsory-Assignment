@@ -24,18 +24,6 @@ public class UserService : IUserService
         _passwordHasher = passwordHasher;
         _messageClient = new MessageClient(_bus);
     }
-    
-
-    public async Task<User> Register(User user)
-    {
-        //Write to database
-        
-        user.Password = await HashPassword(user.Password);
-        
-        var created = _userRepository.Create(user);
-        
-        return created;
-    }
 
     public async Task<User> Login(User user)
     {
