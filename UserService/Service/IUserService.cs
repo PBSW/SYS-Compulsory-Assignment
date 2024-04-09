@@ -17,7 +17,7 @@ public interface IUserService
     
     public Task UnfollowUser(int userId, int unfollowId);
     
-    public Task<IEnumerable<User>> GetFollowers(int userId);
+    public Task<List<User>> GetFollowers(int userId);
 
     public Task<string> HashPassword(string password);
     

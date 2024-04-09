@@ -12,24 +12,24 @@ public class TweetService : ITweetService
         _tweetRepository = tweetRepository;
     }
 
-    public Tweet Post(Tweet tweet)
+    public async Task<Tweet> Post(Tweet tweet)
     {
-        return _tweetRepository.Create(tweet);
+        return await _tweetRepository.Create(tweet);
     }
 
-    public IEnumerable<Tweet> GetTweetsFromUser(int user_id)
+    public async Task<IEnumerable<Tweet>> GetTweetsFromUser(int user_id)
     {
-        return _tweetRepository.AllFrom(user_id);
+        return await _tweetRepository.AllFrom(user_id);
     }
 
-    public IEnumerable<Tweet> GetRecentTweets(int uid, DateTime from, DateTime to)
+    public async Task<IEnumerable<Tweet>> GetRecentTweets(int uid, DateTime from, DateTime to)
     {
-        return _tweetRepository.AllRecent(new List<int> { uid }, from, to);
+        return await _tweetRepository.AllRecent(new List<int> { uid }, from, to);
     }
 
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        return _tweetRepository.Delete(id);
+        return await _tweetRepository.Delete(id);
     }
     
 }

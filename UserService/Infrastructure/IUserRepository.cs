@@ -4,9 +4,9 @@ namespace UserService.Infrastructure;
 
 public interface IUserRepository
 {
-    public IEnumerable<User> All();
-    public User Create(User user);
-    public bool Delete(int id);
-    public User Single(int id);
-    public User Update(User user);
+    public Task<List<User>> All();
+    public Task<User> Create(User user);
+    public Task<bool> Delete(int id);
+    public Task<User> Single(int id);
+    public Task<User> Update(User user);
 }

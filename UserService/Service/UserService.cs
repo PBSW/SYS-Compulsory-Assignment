@@ -27,7 +27,9 @@ public class UserService : IUserService
 
     public async Task<User> Login(User user)
     {
-        var dbUser = _userRepository.All().FirstOrDefault(u => u.Username == user.Username);
+        var users = await _userRepository.All();
+        
+        var dbUser = users.Find(u => u.Username == user.Username);
         
         if (dbUser == null)
         {
@@ -50,17 +52,17 @@ public class UserService : IUserService
         
         _messageClient.Publish(message, "Auth");
         
-        return _userRepository.Update(user);
+        return await _userRepository.Update(user);
     }
     
     public async Task<User> GetUser(int userId)
     {
-        return _userRepository.Single(userId);
+        return await _userRepository.Single(userId);
     }
 
     public async Task<User> UpdateUser(UserUpdate user)
     {
-        var dbUser = _userRepository.Single(user.UserId);
+        var dbUser = await _userRepository.Single(user.UserId);
         
         if (user.Username != null)
         {
@@ -82,20 +84,20 @@ public class UserService : IUserService
             dbUser.ProfilePicture = user.ProfilePicture;
         }
         
-        return _userRepository.Update(dbUser);
+        return await _userRepository.Update(dbUser);
     }
 
     public async Task DeleteUser(int userId)
     {
-        _userRepository.Delete(userId);
+        await _userRepository.Delete(userId);
     }
 
     public async Task FollowUser(int userId, int followId)
     {
         //Get user from database
         //Get followId from database
-        var user = _userRepository.Single(userId);
-        var follow = _userRepository.Single(followId);
+        var user = await _userRepository.Single(userId);
+        var follow = await _userRepository.Single(followId);
         
         //Add followId to user's followers
         user.Followers.Add(follow);
@@ -104,16 +106,16 @@ public class UserService : IUserService
         follow.Following.Add(user);
         
         //Write to database
-        _userRepository.Update(user);
-        _userRepository.Update(follow);
+        await _userRepository.Update(user);
+        await _userRepository.Update(follow);
     }
 
     public async Task UnfollowUser(int userId, int unfollowId)
     {
         //Get user from database
         //Get unfollowId from database
-        var user = _userRepository.Single(userId);
-        var unfollow = _userRepository.Single(unfollowId);
+        var user = await _userRepository.Single(userId);
+        var unfollow = await _userRepository.Single(unfollowId);
         
         //Remove unfollowId from user's followers
         user.Followers.Remove(unfollow);
@@ -122,14 +124,14 @@ public class UserService : IUserService
         unfollow.Following.Remove(user);
         
         //Write to database
-        _userRepository.Update(user);
-        _userRepository.Update(unfollow);
+        await _userRepository.Update(user);
+        await _userRepository.Update(unfollow);
     }
 
-    public async Task<IEnumerable<User>> GetFollowers(int userId)
+    public async Task<List<User>> GetFollowers(int userId)
     {
         //Get user from database
-        var user = _userRepository.Single(userId);
+        var user = await _userRepository.Single(userId);
         
         //Return user's followers
         return user.Followers;

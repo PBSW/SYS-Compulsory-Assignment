@@ -1,4 +1,5 @@
-﻿using Shared.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using Shared.Domain;
 
 namespace UserService.Infrastructure;
 
@@ -11,42 +12,48 @@ public class UserRepository : IUserRepository
         _context = context;
     }
     
-    public IEnumerable<User> All()
+    public async Task<List<User>> All()
     {
-        var users = _context.Users;
+        var users = await _context.Users.ToListAsync();
         return users;
     }
 
-    public User Create(User user)
+    public async Task<User> Create(User user)
     {
-        _context.Users.Add(user);
-        _context.SaveChanges();
-        return user;
+        var added = await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+        return added.Entity;
     }
 
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        var user = _context.Users.Find(id);
+        var user = await _context.Users.FindAsync(id);
         if (user == null)
         {
             return false;
         }
         
         _context.Users.Remove(user);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public User Single(int id)
+    public async Task<User> Single(int id)
     {
-        var user = _context.Users.Find(id);
+        var user = await _context.Users.FindAsync(id);
+        
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
+        
         return user;
     }
 
-    public User Update(User user)
+    public async Task<User> Update(User user)
     {
-        _context.Users.Update(user);
-        _context.SaveChanges();
-        return user;
+        var updated = _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+        return updated.Entity;
     }
 }

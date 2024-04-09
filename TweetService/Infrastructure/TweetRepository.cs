@@ -1,57 +1,65 @@
-﻿using Shared.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using Shared.Domain;
+
 namespace TweetService.Infrastructure;
 
 public class TweetRepository : ITweetRepository
 {
     private readonly DatabaseContext _context;
-    
+
     public TweetRepository(DatabaseContext context)
     {
         _context = context;
     }
-    
-    public IEnumerable<Tweet> AllFrom(int id)
+
+    public async Task<List<Tweet>> AllFrom(int id)
     {
         var tweets = _context.Tweets.Where(t => t.AuthorId == id);
-        return tweets;
+        return await tweets.ToListAsync();
     }
 
-    public IEnumerable<Tweet> AllRecent(IEnumerable<int> ids, DateTime from, DateTime to)
+    public async Task<List<Tweet>> AllRecent(IEnumerable<int> ids, DateTime from, DateTime to)
     {
         var tweets = _context.Tweets.Where(t => ids.Contains(t.AuthorId) && t.CreatedAt >= from && t.CreatedAt <= to);
-        return tweets;
+        return await tweets.ToListAsync();
     }
 
-    public Tweet Create(Tweet tweet)
+    public async Task<Tweet> Create(Tweet tweet)
     {
-        _context.Tweets.Add(tweet);
-        _context.SaveChanges();
-        return tweet;
+        var added = await _context.Tweets.AddAsync(tweet);
+        await _context.SaveChangesAsync();
+        return added.Entity;
     }
 
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        var tweet = _context.Tweets.Find(id);
+        var tweet = await _context.Tweets.FindAsync(id);
         if (tweet == null)
         {
             return false;
         }
-        
+
         _context.Tweets.Remove(tweet);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public Tweet Single(int id)
+    public async Task<Tweet> Single(int id)
     {
-        var tweet = _context.Tweets.Find(id);
+        var tweet = await _context.Tweets.FindAsync(id);
+        
+        if (tweet == null)
+        {
+            throw new Exception("Tweet not found");
+        }
+        
         return tweet;
     }
 
-    public Tweet Update(Tweet tweet)
+    public async Task<Tweet> Update(Tweet tweet)
     {
-        _context.Tweets.Update(tweet);
-        _context.SaveChanges();
-        return tweet;
+        var updated = _context.Tweets.Update(tweet);
+        await _context.SaveChangesAsync();
+        return updated.Entity;
     }
 }
