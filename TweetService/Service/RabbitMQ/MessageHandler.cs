@@ -1,5 +1,6 @@
 ﻿using EasyNetQ;
 using Shared.Domain;
+using Shared.Monitoring;
 using TweetService.Service;
 
 namespace UserService.Service.RabbitMQ;
@@ -17,10 +18,7 @@ public class MessageHandler : BackgroundService
 
     private List<int> GetFollowers()
     {
-        return new List<int>
-        {
-            1, 2, 3, 4
-        };
+        throw new NotImplementedException("TweetService.MethodHandler.GetFollowers not implemented");
     }
 
     private async void HandleUserMessage(Tweet tweet)
@@ -29,10 +27,9 @@ public class MessageHandler : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        Console.WriteLine("Message handler is running...");
+        Monitoring.Log.Debug("Tweet - Message handler is running...");
 
         var messageClient = new MessageClient(_bus);
-
 
         messageClient.Listen<Tweet>(HandleUserMessage, "User");
 
@@ -41,6 +38,6 @@ public class MessageHandler : BackgroundService
             await Task.Delay(1000, stoppingToken);
         }
 
-        Console.WriteLine("Message handler is stopping...");
+        Monitoring.Log.Debug("Tweet - Message handler is stopping...");
     }
 }

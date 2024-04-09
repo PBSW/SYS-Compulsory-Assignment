@@ -1,5 +1,6 @@
 ﻿using EasyNetQ;
 using Shared.Domain;
+using Shared.Monitoring;
 
 namespace UserService.Service.RabbitMQ;
 
@@ -24,11 +25,12 @@ public class MessageHandler : BackgroundService
 
     private async void HandleUserMessage(User user)
     {
+        Monitoring.Log.Debug("User - user message received...");
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        Console.WriteLine("Message handler is running...");
+        Monitoring.Log.Debug("User - Message handler is running...");
 
         var messageClient = new MessageClient(_bus);
 
@@ -40,6 +42,6 @@ public class MessageHandler : BackgroundService
             await Task.Delay(1000, stoppingToken);
         }
 
-        Console.WriteLine("Message handler is stopping...");
+        Monitoring.Log.Debug("User - Message handler is stopping...");
     }
 }

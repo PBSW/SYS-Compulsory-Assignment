@@ -1,5 +1,6 @@
 ﻿using AuthService.Service;
 using EasyNetQ;
+using Shared.Monitoring;
 
 
 namespace AuthService.Service.RabbitMQ;
@@ -41,7 +42,7 @@ public class MessageHandler : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        Console.WriteLine("Message handler is running...");
+        Monitoring.Log.Debug("Message handler is running...");
 
         var messageClient = new MessageClient(_bus);
 
@@ -53,6 +54,6 @@ public class MessageHandler : BackgroundService
             await Task.Delay(1000, stoppingToken);
         }
 
-        Console.WriteLine("Message handler is stopping...");
+        Monitoring.Log.Debug("Message handler is stopping...");
     }
 }

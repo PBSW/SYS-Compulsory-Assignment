@@ -3,6 +3,7 @@ using EasyNetQ;
 using Shared.User.Dto;
 using Shared.Domain;
 using Shared.Messages.AuthMessages;
+using Shared.Monitoring;
 using Shared.Util;
 using UserService.Infrastructure;
 using UserService.Service.RabbitMQ;
@@ -27,6 +28,13 @@ public class UserService : IUserService
 
     public async Task<User> Login(User user)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("UserService.Login");
+        activity?.SetTag("user", user.Username);
+        
+        Monitoring.Log.Debug("UserService.Login called");
+        
+        
         var users = await _userRepository.All();
         
         var dbUser = users.Find(u => u.Username == user.Username);
@@ -57,11 +65,25 @@ public class UserService : IUserService
     
     public async Task<User> GetUser(int userId)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("UserService.GetUser");
+        activity?.SetTag("userId", userId.ToString());
+        
+        Monitoring.Log.Debug("UserService.GetUser called");
+        
+        
         return await _userRepository.Single(userId);
     }
 
     public async Task<User> UpdateUser(UserUpdate user)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("UserService.UpdateUser");
+        activity?.SetTag("userId", user.UserId.ToString());
+        
+        Monitoring.Log.Debug("UserService.UpdateUser called");
+        
+        
         var dbUser = await _userRepository.Single(user.UserId);
         
         if (user.Username != null)
@@ -89,11 +111,26 @@ public class UserService : IUserService
 
     public async Task DeleteUser(int userId)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("UserService.DeleteUser");
+        activity?.SetTag("userId", userId.ToString());
+        
+        Monitoring.Log.Debug("UserService.DeleteUser called");
+        
+        
         await _userRepository.Delete(userId);
     }
 
     public async Task FollowUser(int userId, int followId)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("UserService.FollowUser");
+        activity?.SetTag("userId", userId.ToString());
+        activity?.SetTag("followId", followId.ToString());
+        
+        Monitoring.Log.Debug("UserService.FollowUser called");
+        
+        
         //Get user from database
         //Get followId from database
         var user = await _userRepository.Single(userId);
@@ -112,6 +149,14 @@ public class UserService : IUserService
 
     public async Task UnfollowUser(int userId, int unfollowId)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("UserService.UnfollowUser");
+        activity?.SetTag("userId", userId.ToString());
+        activity?.SetTag("unfollowId", unfollowId.ToString());
+        
+        Monitoring.Log.Debug("UserService.UnfollowUser called");
+        
+        
         //Get user from database
         //Get unfollowId from database
         var user = await _userRepository.Single(userId);
@@ -130,6 +175,13 @@ public class UserService : IUserService
 
     public async Task<List<User>> GetFollowers(int userId)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("UserService.GetFollowers");
+        activity?.SetTag("userId", userId.ToString());
+        
+        Monitoring.Log.Debug("UserService.GetFollowers called");
+        
+        
         //Get user from database
         var user = await _userRepository.Single(userId);
         
@@ -140,11 +192,21 @@ public class UserService : IUserService
     
     public async Task<string> HashPassword(string password)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("UserService.HashPassword");
+        activity?.SetTag("password", password);
+        
+        Monitoring.Log.Debug("UserService.HashPassword called");
+        
         return _passwordHasher.Hash(password);
     }
 
     public async Task<bool> VerifyPassword(string password, string hash)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("UserService.VerifyPassword");
+        Monitoring.Log.Debug("UserService.VerifyPassword called");
+        
         return await HashPassword(password) == hash;
     }
 }

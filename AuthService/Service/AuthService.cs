@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Monitoring;
 using Shared.Util;
 
 
@@ -12,6 +13,13 @@ public class AuthService(string secretKey, IPasswordHasher passwordHasher) : IAu
     
     public bool ValidateToken(string token)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.ValidateToken");
+        activity?.SetTag("token", token);
+        
+        Monitoring.Log.Debug("AuthService.ValidateToken called");
+        
+        
         var tokenHandler = new JwtSecurityTokenHandler();
         var validationParameters = GetValidationParameters();
 
@@ -28,6 +36,13 @@ public class AuthService(string secretKey, IPasswordHasher passwordHasher) : IAu
 
     public string GenerateToken(int userId)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.GenerateToken");
+        activity?.SetTag("userId", userId.ToString());
+
+        Monitoring.Log.Debug("AuthService.GenerateToken called");
+        
+        
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(secretKey);
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -46,6 +61,13 @@ public class AuthService(string secretKey, IPasswordHasher passwordHasher) : IAu
 
     public int GetUserId(string token)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.GetUserId");
+        activity?.SetTag("token", token);
+        
+        Monitoring.Log.Debug("AuthService.GetUserId called");
+        
+        
         var tokenHandler = new JwtSecurityTokenHandler();
         var validationParameters = GetValidationParameters();
         var claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out _);
@@ -60,16 +82,33 @@ public class AuthService(string secretKey, IPasswordHasher passwordHasher) : IAu
 
     public string HashPassword(string password)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.HashPassword");
+        activity?.SetTag("password", password);
+        
+        Monitoring.Log.Debug("AuthService.HashPassword called");
+        
         return passwordHasher.Hash(password);
     }
 
     public bool VerifyPassword(string password, string hash)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.VerifyPassword");
+        activity?.SetTag("password", password);
+        activity?.SetTag("hash", hash);
+        
+        Monitoring.Log.Debug("AuthService.VerifyPassword called");
+        
         return passwordHasher.Hash(password) == hash;
     }
 
     private TokenValidationParameters GetValidationParameters()
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.GetValidationParameters");
+        Monitoring.Log.Debug("AuthService.GetValidationParameters called");
+        
         return new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Shared.Monitoring;
 using Shared.Tweet.Dto;
 using Shared.User.Dto;
 using TweetService.Service;
@@ -23,7 +24,12 @@ public class TweetController : ControllerBase
     [Route("{user_id}")]
     public Task<ActionResult<IEnumerable<TweetDTO>>> GetTweetsFromUser([FromBody] int user_id)
     {
-        throw new NotImplementedException();
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("TweetService.API.GetTweetsFromUser");
+        activity?.SetTag("user_id", user_id.ToString());
+        
+        Monitoring.Log.Debug("TweetController.GetTweetsFromUser called");
+        throw new NotImplementedException("TweetService.API.GetTweetsFromUser not implemented");
     }
     
     [HttpGet]
@@ -31,21 +37,38 @@ public class TweetController : ControllerBase
     public Task<ActionResult<IEnumerable<TweetDTO>>> GetRecentTweets([FromRoute] int uid, 
         [FromQuery] int fromUtc, [FromQuery] int toUtc)
     {
-        throw new NotImplementedException();
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("TweetService.API.GetRecentTweets");
+        activity?.SetTag("uid", uid.ToString());
+        activity?.SetTag("fromUtc", fromUtc.ToString());
+        activity?.SetTag("toUtc", toUtc.ToString());
+        
+        Monitoring.Log.Debug("TweetController.GetRecentTweets called");
+        
+        throw new NotImplementedException("TweetService.API.GetRecentTweets not implemented");
     }
     
     
     [HttpPost]
     public Task<ActionResult<TweetDTO>> PostTweet(TweetCreate tweet)
     {
-        throw new NotImplementedException();
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("TweetService.API.PostTweet");
+        activity?.SetTag("tweet", tweet.Content);
+        //TODO: activity?.SetTag("author", tweet.AuthorId.ToString());
+        
+        throw new NotImplementedException("TweetService.API.PostTweet not implemented");
     }
     
     [HttpDelete]
     [Route("{id}")]
     public Task<ActionResult> DeleteTweet([FromRoute] int id)
     {
-        throw new NotImplementedException();
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("TweetService.API.DeleteTweet");
+        activity?.SetTag("id", id.ToString());
+        
+        throw new NotImplementedException("TweetService.API.DeleteTweet not implemented");
     }
     
     
