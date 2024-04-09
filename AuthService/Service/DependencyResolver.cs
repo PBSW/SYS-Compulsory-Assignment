@@ -11,9 +11,9 @@ public class DependencyResolver
 {
     public static void RegisterServices(IServiceCollection serviceCollection)
     {
-        serviceCollection.AddTransient<IAuthService, AuthService>();
-        serviceCollection.AddTransient<IPasswordHasher, PasswordHasher>();
-        serviceCollection.AddTransient<IJWTProvider, JWTProvider>();
-        serviceCollection.AddTransient<ILoginRepository, LoginRepository>();
+        serviceCollection.AddScoped<IAuthService, AuthService>();
+        serviceCollection.AddScoped<IPasswordHasher, PasswordHasher>();
+        serviceCollection.AddScoped<IJWTProvider, JWTProvider>();
+        serviceCollection.AddScoped<ILoginRepository, LoginRepository>();
     }
 }

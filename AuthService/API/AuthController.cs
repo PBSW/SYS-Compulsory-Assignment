@@ -23,15 +23,29 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost ("Login")]
-    public async Task<IActionResult> Login([FromBody] UserLoginInfo dto)
+    public async Task<IActionResult> Login([FromBody] LoginDTO dto)
     {
-        return Ok();
+        try
+        {
+            return Ok(await _authService.Login(dto));
+        } 
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [AllowAnonymous]
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] RegisterDTO dto)
     {
-        return Ok();
+        try
+        {
+            return Ok(_authService.Register(dto));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }

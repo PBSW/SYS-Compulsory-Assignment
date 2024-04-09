@@ -13,11 +13,11 @@ public class LoginRepository : ILoginRepository
     
     public void AddLogin(Login login)
     {
-        var entity =  _context.FirstOrDefault();
+        throw new NotImplementedException();
     }
     
     public Login GetLogin(string username)
     {
-        return _context.Logins.Find(username);
+        throw new NotImplementedException();
     }
 }
