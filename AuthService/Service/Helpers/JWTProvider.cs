@@ -7,25 +7,39 @@ namespace AuthService.Service.Helpers;
 
 public class JWTProvider : IJWTProvider
 {
-    public string GenerateToken() {
-        var claims = new Claim[] { };
+    public string GenerateToken(string userId, string username, IEnumerable<Claim> additionalClaims = null)
+    {
+        // Add standard claims (e.g., user ID, username)
+        var claims = new List<Claim>
+        {
+            // Add additional claims if needed
+            new Claim(ClaimTypes.NameIdentifier, userId),
+            new Claim(ClaimTypes.Name, username),
+            
+        };
 
-        var signingCredentials = new SigningCredentials(
-            new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("secret")),
-            SecurityAlgorithms.HmacSha256);
-        
+        // Add additional claims if provided
+        if (additionalClaims != null)
+        {
+            claims.AddRange(additionalClaims);
+        }
+
+        // Specify signing credentials (replace "secret" with your actual secret key)
+        var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("secret"));
+        var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+
+        // Specify token parameters
         var token = new JwtSecurityToken(
-            "issuer",
-            "audience",
-            claims,
-            null,
-            DateTime.UtcNow.AddHours(8),
-            signingCredentials
+            issuer: "your-issuer",
+            audience: "your-audience",
+            claims: claims,
+            notBefore: DateTime.UtcNow,
+            expires: DateTime.UtcNow.AddHours(8), // Token expiration time, 8 hours in this case
+            signingCredentials: signingCredentials
         );
-        
-        string tokenValue  = new JwtSecurityTokenHandler()
-            .WriteToken(token);
+
+        // Generate token string
+        string tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
 
         return tokenValue;
     }
