@@ -13,8 +13,7 @@ public class LoginRepository : ILoginRepository
     
     public void AddLogin(Login login)
     {
-        _context.Logins.Add(login);
-        _context.SaveChanges();
+        var entity =  _context.FirstOrDefault();
     }
     
     public Login GetLogin(string username)
