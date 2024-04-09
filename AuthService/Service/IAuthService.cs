@@ -1,14 +1,11 @@
-﻿namespace AuthService.Service;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Shared.User;
+
+namespace AuthService.Service;
 
 public interface IAuthService
 {
-    public bool ValidateToken(string token);
-    
-    public string GenerateToken(int userId);
-    
-    public int GetUserId(string token);
-    
-    public string HashPassword(string password);
-    
-    public bool VerifyPassword(string password, string hash);
+    public Task<IActionResult> Login(LoginDTO dto);
+    public Task<IActionResult> Register(RegisterDTO dto);
 }
