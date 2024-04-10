@@ -1,11 +1,9 @@
-using Shared.Messages;
-
-namespace Shared.User.Dto;
+namespace Shared.User;
 
 /// <summary>
 /// DTO for logging in a user
 /// </summary>
-public class UserLogin 
+public class LoginDTO 
 {
     /// <summary>
     /// The email of the user

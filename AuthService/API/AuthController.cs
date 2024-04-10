@@ -1,12 +1,11 @@
 ﻿using AuthService.Service;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.User;
 
-namespace UserService.API;
+namespace AuthService.API;
 
-/// <summary>
-/// Api contoller for tweets
-/// </summary>
+[Authorize]
 [ApiController]
 [Route("api/auth")]
 public class AuthController : ControllerBase
@@ -18,22 +17,31 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
+    [AllowAnonymous]
     [HttpPost ("Login")]
-    public async Task<IActionResult> Login([FromBody] UserLoginInfo dto)
+    public async Task<IActionResult> Login([FromBody] LoginDTO dto)
     {
-        return Ok();
-        /**
-         * Flow:
-         * HttpClient to UserService to verify credentials/password
-         * If valid, generate token and return it
-         */
+        try
+        {
+            return Ok(await _authService.Login(dto));
+        } 
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
-    
-    //Validate token
-    [HttpPost ("ValidateToken")]
-    public async Task<IActionResult> ValidateToken([FromBody] string token)
+
+    [AllowAnonymous]
+    [HttpPost("Register")]
+    public async Task<IActionResult> Register([FromBody] RegisterDTO dto)
     {
-        var result = _authService.ValidateToken(token);
-        return Ok(result);
+        try
+        {
+            return Ok(_authService.Register(dto));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }

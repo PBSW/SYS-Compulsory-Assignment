@@ -1,81 +1,39 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
+﻿using AuthService.Infrastructure;
+using AuthService.Service.Helpers;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Shared.Domain;
+using Shared.User;
 using Shared.Util;
-
 
 namespace AuthService.Service;
 
-public class AuthService(string secretKey, IPasswordHasher passwordHasher) : IAuthService
+public class AuthService : IAuthService
 {
+    private readonly IJWTProvider _jwtProvider;
+    private readonly IPasswordHasher _passwordHasher;
+    private readonly ILoginRepository _loginRepository;
+    private readonly IMapper _mapper;
     
-    public bool ValidateToken(string token)
+    public AuthService(
+        IJWTProvider jwtProvider,
+        IPasswordHasher passwordHasher,
+        ILoginRepository loginRepository,
+        IMapper mapper)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var validationParameters = GetValidationParameters();
-
-        try
-        {
-            tokenHandler.ValidateToken(token, validationParameters, out _);
-            return true;
-        }
-        catch (Exception)
-        {
-            return false;
-        }
+        _jwtProvider = jwtProvider;
+        _passwordHasher = passwordHasher;
+        _loginRepository = loginRepository;
+        _mapper = mapper;
     }
 
-    public string GenerateToken(int userId)
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(secretKey);
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new Claim[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
-            }),
-            Expires = DateTime.UtcNow.AddHours(1), // Token expires in 1 hour
-            SigningCredentials =
-                new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
+    public Task<IActionResult> Login(LoginDTO dto)
+    { 
+        throw new NotImplementedException();
     }
 
-    public int GetUserId(string token)
+    public Task<IActionResult> Register(RegisterDTO dto)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var validationParameters = GetValidationParameters();
-        var claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out _);
-        var userIdClaim = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier);
-        if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
-        {
-            return userId;
-        }
-
-        throw new Exception("Invalid token or missing user ID claim.");
-    }
-
-    public string HashPassword(string password)
-    {
-        return passwordHasher.Hash(password);
-    }
-
-    public bool VerifyPassword(string password, string hash)
-    {
-        return passwordHasher.Hash(password) == hash;
-    }
-
-    private TokenValidationParameters GetValidationParameters()
-    {
-        return new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey)),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
+        throw new NotImplementedException();
     }
 }

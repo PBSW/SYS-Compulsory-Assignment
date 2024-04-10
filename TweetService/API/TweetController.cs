@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shared.Tweet.Dto;
-using Shared.User.Dto;
 using TweetService.Service;
 
 namespace TweetService.API;

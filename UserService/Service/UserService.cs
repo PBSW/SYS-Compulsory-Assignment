@@ -1,8 +1,8 @@
 ﻿using System.Text;
 using EasyNetQ;
-using Shared.User.Dto;
 using Shared.Domain;
 using Shared.Messages.AuthMessages;
+using Shared.User;
 using Shared.Util;
 using UserService.Infrastructure;
 using UserService.Service.RabbitMQ;
@@ -36,12 +36,12 @@ public class UserService : IUserService
             throw new Exception("User not found");
         }
 
-        var verified = await VerifyPassword(user.Password, dbUser.Password); 
+        //var verified = await VerifyPassword(user.Password, dbUser.Password); 
         
-        if (!verified)
-        {
-            throw new Exception("Invalid password");
-        }
+        //if (!verified)
+        //{
+        //    throw new Exception("Invalid password");
+        //}
 
 
         var message = new CreateTokenMessage()
@@ -60,7 +60,7 @@ public class UserService : IUserService
         return await _userRepository.Single(userId);
     }
 
-    public async Task<User> UpdateUser(UserUpdate user)
+    public async Task<User> UpdateUser(UserUpdateDTO user)
     {
         var dbUser = await _userRepository.Single(user.UserId);
         
@@ -71,7 +71,7 @@ public class UserService : IUserService
         
         if (user.Password != null)
         {
-            dbUser.Password = user.Password;
+            //dbUser.Password = user.Password;
         }
         
         if (user.Bio != null)

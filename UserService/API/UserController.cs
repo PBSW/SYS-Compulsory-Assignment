@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Shared.User.Dto;
+using Shared.User;
 using UserService.Service;
 
 namespace UserService.API;
@@ -26,7 +26,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut]
-    public Task<ActionResult<UserDTO>> UpdateUser(UserUpdate user)
+    public Task<ActionResult<UserDTO>> UpdateUser(UserUpdateDTO user)
     {
         throw new NotImplementedException();
     }
