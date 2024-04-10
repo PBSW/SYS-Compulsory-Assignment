@@ -7,13 +7,12 @@ namespace AuthService.Service.Helpers;
 
 public class JWTProvider : IJWTProvider
 {
-    public string GenerateToken(string userId, string username, IEnumerable<Claim> additionalClaims = null)
+    public string GenerateToken(string username, IEnumerable<Claim> additionalClaims = null)
     {
         // Add standard claims (e.g., user ID, username)
         var claims = new List<Claim>
         {
             // Add additional claims if needed
-            new Claim(ClaimTypes.NameIdentifier, userId),
             new Claim(ClaimTypes.Name, username),
             
         };
@@ -25,7 +24,7 @@ public class JWTProvider : IJWTProvider
         }
 
         // Specify signing credentials (replace "secret" with your actual secret key)
-        var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("secret"));
+        var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisIsStupidAndShouldntBeStoredHere"));
         var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
         // Specify token parameters

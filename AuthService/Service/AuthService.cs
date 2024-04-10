@@ -32,7 +32,16 @@ public class AuthService : IAuthService
 
     public Task<IActionResult> Login(LoginDTO dto)
     { 
-        throw new NotImplementedException();
+AuthUser user = _authRepository.FindUser(dto.Email);
+        
+        if (!Authenticate(dto.plainPassword, user))
+        {
+            return Task.FromResult<IActionResult>(new UnauthorizedResult());
+        }
+        
+        string token = _jwtProvider.GenerateToken(user.Username);
+        
+        return Task.FromResult<IActionResult>(new OkObjectResult(token));
     }
 
     public Task<IActionResult> Register(RegisterDTO dto)

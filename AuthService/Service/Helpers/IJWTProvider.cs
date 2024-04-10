@@ -4,5 +4,5 @@ namespace AuthService.Service.Helpers;
 
 public interface IJWTProvider
 {
-    public string GenerateToken(string userId, string username, IEnumerable<Claim> additionalClaims = null);
+    public string GenerateToken(string username, IEnumerable<Claim> additionalClaims = null);
 }
