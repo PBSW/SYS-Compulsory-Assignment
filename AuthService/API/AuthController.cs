@@ -1,15 +1,11 @@
 ﻿using AuthService.Service;
-using AuthService.Service.Helpers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shared.User;
 
-namespace UserService.API;
+namespace AuthService.API;
 
-/// <summary>
-/// Api contoller for tweets
-/// </summary>
+[Authorize]
 [ApiController]
 [Route("api/auth")]
 public class AuthController : ControllerBase
