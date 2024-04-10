@@ -1,11 +1,7 @@
-﻿using System.Text;
-using EasyNetQ;
-using Shared.Domain;
+﻿using Shared.Domain;
 using Shared.Messages.AuthMessages;
 using Shared.User;
-using Shared.Util;
 using UserService.Infrastructure;
-using UserService.Service.RabbitMQ;
 
 namespace UserService.Service;
 
@@ -13,16 +9,10 @@ public class UserService : IUserService
 {
     
     private readonly IUserRepository _userRepository;
-    private readonly MessageClient _messageClient;
-    private readonly IBus _bus;
-    private readonly IPasswordHasher _passwordHasher;
     
-    public UserService(IUserRepository userRepository, IBus bus, IPasswordHasher passwordHasher)
+    public UserService(IUserRepository userRepository)
     {
         _userRepository = userRepository;
-        _bus = bus;
-        _passwordHasher = passwordHasher;
-        _messageClient = new MessageClient(_bus);
     }
 
     public async Task<User> Login(User user)
@@ -49,8 +39,6 @@ public class UserService : IUserService
             UserId = dbUser.Id,
             Expiration = DateTime.Now.AddHours(1)
         };
-        
-        _messageClient.Publish(message, "Auth");
         
         return await _userRepository.Update(user);
     }
@@ -135,16 +123,5 @@ public class UserService : IUserService
         
         //Return user's followers
         return user.Followers;
-    }
-    
-    
-    public async Task<string> HashPassword(string password)
-    {
-        return _passwordHasher.Hash(password);
-    }
-
-    public async Task<bool> VerifyPassword(string password, string hash)
-    {
-        return await HashPassword(password) == hash;
     }
 }

@@ -1,5 +1,7 @@
 using EasyNetQ;
+using Microsoft.EntityFrameworkCore;
 using UserService.API;
+using UserService.Infrastructure;
 using UserService.Service;
 using UserService.Service.RabbitMQ;
 
@@ -10,10 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<DatabaseContext>(options =>
+{
+    options.UseSqlServer("Host=postgres;Database=postgres;Username=postgres;Password=postgres");
+});
+
 //TODO
-var bus = RabbitHutch.CreateBus("host=rabbitmq;port=5672;virtualHost=/;username=guest;password=guest");
-builder.Services.AddSingleton(bus);
-builder.Services.AddHostedService<MessageHandler>();
+builder.Services.AddSingleton(new MessageClient(RabbitHutch.CreateBus("host=rabbitmq;port=5672;virtualHost=/;username=guest;password=guest")));
 
 DependencyResolver.RegisterServices(builder.Services);
 

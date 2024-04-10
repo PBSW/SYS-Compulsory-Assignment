@@ -18,10 +18,4 @@ public interface IUserService
     public Task UnfollowUser(int userId, int unfollowId);
     
     public Task<List<User>> GetFollowers(int userId);
-
-    public Task<string> HashPassword(string password);
-    
-    public Task<bool> VerifyPassword(string password, string hash);
-    
-
 }

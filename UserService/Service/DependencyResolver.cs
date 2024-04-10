@@ -9,7 +9,7 @@ public class DependencyResolver
 {
     public static void RegisterServices(IServiceCollection serviceCollection)
     {
-        serviceCollection.AddTransient<IUserService, IUserService>();
-        serviceCollection.AddTransient<IUserRepository, UserRepository>();
+        serviceCollection.AddScoped<IUserService, UserService>();
+        serviceCollection.AddScoped<IUserRepository, UserRepository>();
     }
 }
