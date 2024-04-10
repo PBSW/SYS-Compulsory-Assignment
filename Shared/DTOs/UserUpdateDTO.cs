@@ -1,11 +1,9 @@
-using Shared.Messages;
-
-namespace Shared.User.Dto;
+namespace Shared.User;
 
 /// <summary>
 /// DTO for editing a user profile
 /// </summary>
-public class UserUpdate
+public class UserUpdateDTO
 {
     
     public int UserId { get; set; }

@@ -1,11 +1,9 @@
-using Shared.Messages;
-
-namespace Shared.User.Dto;
+namespace Shared.User;
 
 /// <summary>
 /// DTO for creating a new user account 
 /// </summary>
-public class UserRegister 
+public class RegisterDTO 
 {
     /// <summary>
     /// The email of the new user

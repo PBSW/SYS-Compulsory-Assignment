@@ -25,13 +25,13 @@ public class MessageHandler : BackgroundService
 
     private async void HandleAuthenticationMessage(string token)
     {
-        var userId = _authService.GetUserId(token);
+        //var userId = _authService.GetUserId(token);
         var followers = GetFollowers();
 
-        if (followers.Contains(userId))
+        //if (followers.Contains(userId))
         {
-            var newToken = _authService.GenerateToken(userId);
-            _bus.PubSub.Publish(newToken, "Token");
+            //var newToken = _authService.GenerateToken(userId);
+            //_bus.PubSub.Publish(newToken, "Token");
         }
     }
   

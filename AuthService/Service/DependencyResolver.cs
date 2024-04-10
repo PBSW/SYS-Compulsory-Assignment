@@ -1,4 +1,7 @@
-﻿using Shared.Util;
+﻿using AuthService.Infrastructure;
+using AuthService.Service.Helpers;
+using Shared.Util;
+using PasswordHasher = Shared.Util.PasswordHasher;
 
 namespace AuthService.Service;
 
@@ -8,7 +11,9 @@ public class DependencyResolver
 {
     public static void RegisterServices(IServiceCollection serviceCollection)
     {
-        serviceCollection.AddTransient<IAuthService, AuthService>();
-        serviceCollection.AddTransient<IPasswordHasher, PasswordHasher>();
+        serviceCollection.AddScoped<IAuthService, AuthService>();
+        serviceCollection.AddScoped<IPasswordHasher, PasswordHasher>();
+        serviceCollection.AddScoped<IJWTProvider, JWTProvider>();
+        serviceCollection.AddScoped<ILoginRepository, LoginRepository>();
     }
 }

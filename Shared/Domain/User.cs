@@ -19,11 +19,6 @@ public class User
     /// The Email address of the user
     /// </summary>
     public string Email { get; set; } = null!;
-    
-    /// <summary>
-    /// The current hashed password 
-    /// </summary>
-    public string Password { get; set; } = null!;
 
     /// <summary>
     /// The user profile description
@@ -34,16 +29,6 @@ public class User
     /// The current profile picture of the user
     /// </summary>
     public string? ProfilePicture { get; set; }
-    
-    /// <summary>
-    /// The current active access token  
-    /// </summary>
-    public string? Token { get; set; } = null!;
-    
-    /// <summary>
-    /// The UTC timestamp of when the token is no longer valid
-    /// </summary>
-    public DateTime? TokenExpire { get; set; }
 
     /// <summary>
     /// List of other users that this one follows

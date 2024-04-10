@@ -1,6 +1,4 @@
-using Shared.Messages;
-
-namespace Shared.User.Dto;
+namespace Shared.User;
 
 /// <summary>
 /// DTO for getting authentication details when logged in
