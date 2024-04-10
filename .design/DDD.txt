@@ -1,23 +1,29 @@
 
+auth:
+login 		 -> gateway(http POST) -> ms(auth) 
+verifyToken	 -> gateway(http POST) -> ms(auth) 
+
+
+
 users:
 /api/user/<self>/subscribe/<other>
 /api/user/<self>/unsubscribe/<other>
 
-info     -> gateway(http GET)   -> ms(auth) -> db1
-login    -> gateway(http POST)  -> ms(auth) -> db1
-register -> gateway(http POST)  -> ms(auth) -> db1
-update   -> gateway(http PUT)   -> ms(auth) -> db1
+info     -> gateway(http GET)      -> ms(auth) -> ms(user) -> db1
+login    -> gateway(http POST)     -> ms(auth) -> ms(user) -> db1
+register -> gateway(http POST)     -> ms(auth) -> ms(user) -> db1
+update   -> gateway(http PUT)      -> ms(auth) -> ms(user) -> db1
+delete   -> gateway(http DELETE)   -> ms(auth) -> ms(user) -> db1
 
-my_followers -> gateway(http GET) -> ms(auth) -> db1
-follow       -> gateway(http POST) -> ms(auth) -> db1
-unfollow     -> gateway(http POST) -> ms(auth) -> db1
+my_followers -> gateway(http GET)  -> ms(auth) -> ms(user) -> db1
+follow       -> gateway(http POST) -> ms(auth) -> ms(user) -> db1
+unfollow     -> gateway(http POST) -> ms(auth) -> ms(user) -> db1
 
 post:
-create -> gateway(http POST - token) -> ms(auth - token) -> ms(posts) -> db2
+create -> gateway(http POST - token)   -> ms(auth - token) -> ms(posts) -> db2
 delete -> gateway(http DELETE - token) -> ms(auth - token) -> ms(posts) -> db2
 
-timeline:
-recent  -> gateway(http GET - token, count)  
+recent  -> gateway(http GET - token, count, fromUTC, toUTC)  
         -> ms(auth - token) 
         -> ms(auth - my_followers) 
         -> ms(posts, count) 
