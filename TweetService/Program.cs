@@ -1,6 +1,6 @@
-using EasyNetQ;
+using Microsoft.EntityFrameworkCore;
+using TweetService.Infrastructure;
 using TweetService.Service;
-using UserService.Service.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,15 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//TODO
-var bus = RabbitHutch.CreateBus("host=rabbitmq;port=5672;virtualHost=/;username=guest;password=guest");
-builder.Services.AddSingleton(bus);
-builder.Services.AddHostedService<MessageHandler>();
+builder.Services.AddDbContext<DatabaseContext>(options =>
+{
+    options.UseSqlServer("Host=postgres;Database=postgres;Username=postgres;Password=postgres");
+});
 
 DependencyResolver.RegisterServices(builder.Services);
 
 builder.Services.AddControllers();
-
 
 var app = builder.Build();
 

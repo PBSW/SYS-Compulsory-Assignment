@@ -1,4 +1,5 @@
 using System.Text;
+using AuthService.Infrastructure;
 using AuthService.Service;
 using AuthService.Service.RabbitMQ;
 using EasyNetQ;
@@ -33,6 +34,7 @@ builder.Services.AddSingleton(bus);
 builder.Services.AddHostedService<MessageHandler>();
 
 DependencyResolver.RegisterServices(builder.Services);
+
 builder.Services.AddControllers();
 
 var app = builder.Build();

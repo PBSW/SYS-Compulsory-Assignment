@@ -1,5 +1,6 @@
 ﻿using AuthService.Infrastructure;
 using AuthService.Service.Helpers;
+using Microsoft.EntityFrameworkCore;
 using Shared.Util;
 using PasswordHasher = Shared.Util.PasswordHasher;
 
