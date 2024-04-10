@@ -1,6 +1,4 @@
 ﻿using EasyNetQ;
-using Microsoft.EntityFrameworkCore;
-using Shared.Util;
 using TweetService.Infrastructure;
 using UserService.Service.RabbitMQ;
 
@@ -20,6 +18,5 @@ public class DependencyResolver
         
         serviceCollection.AddScoped<ITweetService, TweetService>();
         serviceCollection.AddScoped<ITweetRepository, TweetRepository>();
-        serviceCollection.AddScoped<IPasswordHasher, PasswordHasher>();
     }
 }

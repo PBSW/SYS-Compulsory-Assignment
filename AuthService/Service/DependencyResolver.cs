@@ -1,8 +1,5 @@
 ﻿using AuthService.Infrastructure;
 using AuthService.Service.Helpers;
-using Microsoft.EntityFrameworkCore;
-using Shared.Util;
-using PasswordHasher = Shared.Util.PasswordHasher;
 
 namespace AuthService.Service;
 
@@ -17,6 +14,6 @@ public class DependencyResolver
         serviceCollection.AddScoped<IAuthService, AuthService>();
         serviceCollection.AddScoped<IPasswordHasher, PasswordHasher>();
         serviceCollection.AddScoped<IJWTProvider, JWTProvider>();
-        serviceCollection.AddScoped<ILoginRepository, LoginRepository>();
+        serviceCollection.AddScoped<IAuthRepository, AuthRepository>();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace AuthService.Service.Helpers;
 
-public class PasswordHasher
+public class PasswordHasher : IPasswordHasher
 {
     public string HashPassword(string password, byte[] salt)
     {

@@ -9,9 +9,9 @@ public class DatabaseContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Login>()
+        modelBuilder.Entity<AuthUser>()
             .HasKey(l => l.Username);
     }
     
-    public DbSet<Login> Logins { get; set; }
+    public DbSet<AuthUser> AuthUsers { get; set; }
 }

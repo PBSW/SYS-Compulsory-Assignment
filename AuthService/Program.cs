@@ -12,7 +12,8 @@ var config = builder.Configuration;
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
-    options.UseSqlServer("Host=postgres;Database=postgres;Username=postgres;Password=postgres");
+    options.UseMySql(config.GetConnectionString("AuthDatabase"),
+        ServerVersion.AutoDetect(config.GetConnectionString("AuthDatabase")));
 });
 
 builder.Services.AddSingleton(new MessageClient(RabbitHutch.CreateBus("host=rabbitmq;port=5672;virtualHost=/;username=guest;password=guest")));

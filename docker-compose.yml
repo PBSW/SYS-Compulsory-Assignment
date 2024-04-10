@@ -95,7 +95,7 @@ services:
       - tweet-service-vol:/var/lib/mysql
   
   auth-sql:
-    container_name: MySQL-tweet
+    container_name: MySQL-auth
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -140,6 +140,7 @@ services:
       - zipkin_data:/mysql/data
   
 volumes:
+    auth-service-vol:
     tweet-service-vol:
     user-service-vol:
     rps_seq_data:
