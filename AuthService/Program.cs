@@ -4,10 +4,18 @@ using AuthService.Service;
 using AuthService.Service.RabbitMQ;
 using EasyNetQ;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
+
+builder.Services.AddDbContext<DatabaseContext>(options =>
+{
+    options.UseSqlServer("Host=postgres;Database=postgres;Username=postgres;Password=postgres");
+});
+
+builder.Services.AddSingleton(new MessageClient(RabbitHutch.CreateBus("host=rabbitmq;port=5672;virtualHost=/;username=guest;password=guest")));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(x =>
@@ -29,9 +37,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-var bus = RabbitHutch.CreateBus("host=rabbitmq;port=5672;virtualHost=/;username=guest;password=guest");
-builder.Services.AddSingleton(bus);
-builder.Services.AddHostedService<MessageHandler>();
 
 DependencyResolver.RegisterServices(builder.Services);
 
