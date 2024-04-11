@@ -136,7 +136,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "user-service",
-          "Port": 80
+          "Port": 8080
         }
       ]
     },
@@ -150,7 +150,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "user-service",
-          "Port": 80
+          "Port": 8080
         }
       ]
     },
@@ -164,7 +164,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "user-service",
-          "Port": 80
+          "Port": 8080
         }
       ]
     }

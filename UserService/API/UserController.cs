@@ -32,6 +32,7 @@ public class UserController : ControllerBase
             Monitoring.Log.Debug("UserService.API.GetUser called");
 
             var user = await _userService.GetUser(id);
+            
             return BadRequest("GetUser endpoint - Not implemented");
         }
         catch (Exception e)
@@ -53,6 +54,8 @@ public class UserController : ControllerBase
             Monitoring.Log.Debug("UserService.API.UpdateUser called");
 
             var updatedUser = _userService.UpdateUser(user);
+            
+            
             return BadRequest("UpdateUser endpoint - Not implemented");
         }
         catch (Exception e)
