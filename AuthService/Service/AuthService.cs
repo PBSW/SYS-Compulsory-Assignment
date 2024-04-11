@@ -1,3 +1,4 @@
+
 ﻿using System.Security.Cryptography;
 using AuthService.Infrastructure;
 using AuthService.Service.Helpers;
@@ -5,6 +6,13 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Domain;
 using Shared.User;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Shared.Monitoring;
+using Shared.Util;
+
 
 namespace AuthService.Service;
 
@@ -32,6 +40,13 @@ public class AuthService : IAuthService
 
     public async Task<IActionResult> Login(LoginDTO dto)
     { 
+
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.ValidateToken");
+        activity?.SetTag("token", token);
+        
+        Monitoring.Log.Debug("AuthService.ValidateToken called");
+
         AuthUser user = await _authRepository.FindUser(dto.Email);
         
         bool isAuthenticated = await Authenticate(dto.plainPassword, user);
@@ -48,6 +63,13 @@ public class AuthService : IAuthService
 
     public async Task<IActionResult> Register(RegisterDTO dto)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.GenerateToken");
+        activity?.SetTag("userId", userId.ToString());
+
+        Monitoring.Log.Debug("AuthService.GenerateToken called");
+        
+        
         AuthUser authUser = _mapper.Map<RegisterDTO, AuthUser>(dto);
         
         authUser.salt = GenerateSalt();
@@ -61,6 +83,12 @@ public class AuthService : IAuthService
 
     private async Task<bool> Authenticate(string plainTextPassword, AuthUser user)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.Authenticate");
+        activity?.SetTag("token", token);
+        
+        Monitoring.Log.Debug("AuthService.Authenticate called");
+        
         if (user == null) return false;
         
         var hashedPassword = await _passwordHasher.HashPassword(plainTextPassword, user.salt);
@@ -70,6 +98,12 @@ public class AuthService : IAuthService
 
     private byte[] GenerateSalt()
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.HashPassword");
+        activity?.SetTag("password", password);
+        
+        Monitoring.Log.Debug("AuthService.HashPassword called");
+        
         return RandomNumberGenerator.GetBytes(keySize);
     }
 }
