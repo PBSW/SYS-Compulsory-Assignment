@@ -7,12 +7,13 @@ namespace AuthService.Service.Helpers;
 
 public class JWTProvider : IJWTProvider
 {
-    public string GenerateToken(string username, IEnumerable<Claim> additionalClaims = null)
+    public string GenerateToken(int id, string username, IEnumerable<Claim> additionalClaims = null)
     {
         // Add standard claims (e.g., user ID, username)
         var claims = new List<Claim>
         {
             // Add additional claims if needed
+            new Claim(ClaimTypes.NameIdentifier, id.ToString()),
             new Claim(ClaimTypes.Name, username),
             
         };

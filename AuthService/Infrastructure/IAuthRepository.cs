@@ -4,6 +4,7 @@ namespace AuthService.Infrastructure;
 
 public interface IAuthRepository
 {
-    public Task Register(AuthUser authUser);
+    public Task<int> Register(AuthUser authUser);
     public Task<AuthUser> FindUser(string username);
+    public Task<User> GetUserId(string username);
 }

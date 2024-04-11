@@ -28,10 +28,10 @@ public class AuthService : IAuthService
         IAuthRepository authRepository,
         IMapper mapper)
     {
-        _jwtProvider = jwtProvider;
-        _passwordHasher = passwordHasher;
-        _authRepository = authRepository;
-        _mapper = mapper;
+        _jwtProvider = jwtProvider ?? throw new NullReferenceException("jwtProvider is null");
+        _passwordHasher = passwordHasher ?? throw new NullReferenceException("passwordHasher is null");
+        _authRepository = authRepository ?? throw new NullReferenceException("authRepository is null");
+        _mapper = mapper ?? throw new NullReferenceException("mapper is null");
     }
 
     public async Task<IActionResult> Login(LoginDTO dto)
@@ -40,16 +40,23 @@ public class AuthService : IAuthService
         using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.ValidateToken");
         Monitoring.Log.Debug("AuthService.ValidateToken called");
 
-        AuthUser user = await _authRepository.FindUser(dto.Email);
+        AuthUser authUser = await _authRepository.FindUser(dto.Email);
         
-        bool isAuthenticated = await Authenticate(dto.plainPassword, user);
+        if (authUser == null)
+        {
+            throw new ArgumentException("User not found");
+        }
+        
+        bool isAuthenticated = await Authenticate(dto.plainPassword, authUser);
         
         if (!isAuthenticated)
         {
             return await Task.FromResult<IActionResult>(new UnauthorizedResult());
         }
         
-        string token = _jwtProvider.GenerateToken(user.Username);
+        User user = await _authRepository.GetUserId(authUser.Username);
+        
+        string token = _jwtProvider.GenerateToken(user.Id, user.Username);
         
         return await Task.FromResult<IActionResult>(new OkObjectResult(token));
     }
@@ -59,15 +66,24 @@ public class AuthService : IAuthService
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.GenerateToken");
         Monitoring.Log.Debug("AuthService.GenerateToken called");
-        
+
+        if (dto == null)
+        {
+            throw new ArgumentNullException("Dto is null");
+        }
         
         AuthUser authUser = _mapper.Map<RegisterDTO, AuthUser>(dto);
         
         authUser.salt = GenerateSalt();
         authUser.hashedPassword = await _passwordHasher.HashPassword(dto.Password, authUser.salt);
         
-        await _authRepository.Register(authUser);
+        var change = await _authRepository.Register(authUser);
 
+        if (change == 0)
+        {
+            return await Task.FromResult<IActionResult>(new BadRequestResult());
+        }
+        
         return await Task.FromResult<IActionResult>(new OkResult());
     }
 
