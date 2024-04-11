@@ -1,8 +1,5 @@
 ﻿using AuthService.Infrastructure;
 using AuthService.Service.Helpers;
-using AuthService.Service.RabbitMQ;
-using EasyNetQ;
-using EasyNetQ.Consumer;
 
 namespace AuthService.Service;
 

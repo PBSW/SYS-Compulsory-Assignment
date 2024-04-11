@@ -46,19 +46,6 @@ services:
       rabbitmq:
         condition: service_healthy
   
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: rabbitmq
-    healthcheck:
-      test: rabbitmq-diagnostics check_port_connectivity
-      interval: 1s
-      timeout: 3s
-      retries: 30
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-
-  
   user-sql:
     container_name: MySQL-user
     image: mysql:5.7
@@ -139,9 +126,6 @@ services:
       - zipkin_data:/mysql/data
         
         
-
-    
-  
 volumes:
     auth-service-vol:
     tweet-service-vol:

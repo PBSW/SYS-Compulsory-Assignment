@@ -1,9 +1,6 @@
-using EasyNetQ;
 using Microsoft.EntityFrameworkCore;
-using UserService.API;
 using UserService.Infrastructure;
 using UserService.Service;
-using UserService.Service.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +13,6 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseSqlServer("Host=MySQL-user;database=db;user=database_user;password=Password1!;SslMode=Disabled");
 });
-
-//TODO
-builder.Services.AddSingleton(new MessageClient(RabbitHutch.CreateBus("host=rabbitmq;port=5672;virtualHost=/;username=guest;password=guest")));
 
 DependencyResolver.RegisterServices(builder.Services);
 
