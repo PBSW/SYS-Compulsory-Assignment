@@ -18,8 +18,6 @@ services:
     depends_on:
       gateway:
         condition: service_started
-      rabbitmq:
-        condition: service_healthy
   
   
   user-service:
@@ -31,8 +29,6 @@ services:
     depends_on:
       gateway:
         condition: service_started
-      rabbitmq:
-        condition: service_healthy
   
   tweet-service:
     build:
@@ -43,8 +39,6 @@ services:
     depends_on:
       gateway:
         condition: service_started
-      rabbitmq:
-        condition: service_healthy
   
   user-sql:
     container_name: MySQL-user
