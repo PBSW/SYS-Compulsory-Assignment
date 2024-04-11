@@ -4,13 +4,13 @@ namespace AuthService.Service.Helpers;
 
 public class PasswordHasher : IPasswordHasher
 {
-    public string HashPassword(string password, byte[] salt)
+    public Task<string> HashPassword(string password, byte[] salt)
     {
-        return Convert.ToBase64String(KeyDerivation.Pbkdf2(
+        return Task.Run(() => Convert.ToBase64String(KeyDerivation.Pbkdf2(
             password,
             salt,
             KeyDerivationPrf.HMACSHA256,
             10000,
-            256 / 8));
+            256 / 8)));
     }
 }

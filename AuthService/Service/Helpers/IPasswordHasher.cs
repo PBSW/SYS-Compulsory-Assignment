@@ -2,5 +2,5 @@
 
 public interface IPasswordHasher
 {
-    public string HashPassword(string password, byte[] salt);
+    public Task<string> HashPassword(string password, byte[] salt);
 }

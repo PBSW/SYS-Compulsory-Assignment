@@ -30,38 +30,40 @@ public class AuthService : IAuthService
         _mapper = mapper;
     }
 
-    public Task<IActionResult> Login(LoginDTO dto)
+    public async Task<IActionResult> Login(LoginDTO dto)
     { 
-AuthUser user = _authRepository.FindUser(dto.Email);
+        AuthUser user = await _authRepository.FindUser(dto.Email);
         
-        if (!Authenticate(dto.plainPassword, user))
+        bool isAuthenticated = await Authenticate(dto.plainPassword, user);
+        
+        if (!isAuthenticated)
         {
-            return Task.FromResult<IActionResult>(new UnauthorizedResult());
+            return await Task.FromResult<IActionResult>(new UnauthorizedResult());
         }
         
         string token = _jwtProvider.GenerateToken(user.Username);
         
-        return Task.FromResult<IActionResult>(new OkObjectResult(token));
+        return await Task.FromResult<IActionResult>(new OkObjectResult(token));
     }
 
-    public Task<IActionResult> Register(RegisterDTO dto)
+    public async Task<IActionResult> Register(RegisterDTO dto)
     {
         AuthUser authUser = _mapper.Map<RegisterDTO, AuthUser>(dto);
         
         authUser.salt = GenerateSalt();
         
-        authUser.hashedPassword = _passwordHasher.HashPassword(dto.Password, authUser.salt);
+        authUser.hashedPassword = await _passwordHasher.HashPassword(dto.Password, authUser.salt);
         
-        _authRepository.Register(authUser);
+        await _authRepository.Register(authUser);
 
-        return Task.FromResult<IActionResult>(new OkResult());
+        return await Task.FromResult<IActionResult>(new OkResult());
     }
 
-    private bool Authenticate(string plainTextPassword, AuthUser user)
+    private async Task<bool> Authenticate(string plainTextPassword, AuthUser user)
     {
         if (user == null) return false;
         
-        var hashedPassword = _passwordHasher.HashPassword(plainTextPassword, user.salt);
+        var hashedPassword = await _passwordHasher.HashPassword(plainTextPassword, user.salt);
         
         return hashedPassword.Equals(user.hashedPassword);
     }

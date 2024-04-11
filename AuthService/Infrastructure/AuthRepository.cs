@@ -1,4 +1,5 @@
-﻿using Shared.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using Shared.Domain;
 
 namespace AuthService.Infrastructure;
 
@@ -11,15 +12,14 @@ public class AuthRepository : IAuthRepository
         _context = context;
     }
     
-    public void Register(AuthUser authUser)
+    public async Task Register(AuthUser authUser)
     {
         _context.AuthUsers.Add(authUser);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
     
-    public AuthUser FindUser(string username)
+    public async Task<AuthUser> FindUser(string username)
     {
-        var entity = _context.AuthUsers.FirstOrDefault(user => user.email.Equals(user.email));
-        return entity;
+        return await _context.AuthUsers.FirstOrDefaultAsync(user => user.email.Equals(user.email));
     }
 }
