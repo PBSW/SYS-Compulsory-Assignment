@@ -36,10 +36,8 @@ public class AuthService : IAuthService
 
     public async Task<IActionResult> Login(LoginDTO dto)
     { 
-
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.ValidateToken");
-        
         Monitoring.Log.Debug("AuthService.ValidateToken called");
 
         AuthUser user = await _authRepository.FindUser(dto.Email);
@@ -60,14 +58,12 @@ public class AuthService : IAuthService
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.GenerateToken");
-
         Monitoring.Log.Debug("AuthService.GenerateToken called");
         
         
         AuthUser authUser = _mapper.Map<RegisterDTO, AuthUser>(dto);
         
         authUser.salt = GenerateSalt();
-        
         authUser.hashedPassword = await _passwordHasher.HashPassword(dto.Password, authUser.salt);
         
         await _authRepository.Register(authUser);

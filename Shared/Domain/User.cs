@@ -26,11 +26,6 @@ public class User
     public string? Bio { get; set; }
 
     /// <summary>
-    /// The current profile picture of the user
-    /// </summary>
-    public string? ProfilePicture { get; set; }
-
-    /// <summary>
     /// List of other users that this one follows
     /// </summary>
     public List<User> Following { get; set; } = [];

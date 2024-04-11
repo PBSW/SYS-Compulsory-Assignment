@@ -112,11 +112,6 @@ public class UserService : IUserService
             dbUser.Bio = user.Bio;
         }
         
-        if (user.ProfilePicture != null)
-        {
-            dbUser.ProfilePicture = user.ProfilePicture;
-        }
-        
         return await _userRepository.Update(dbUser);
     }
 

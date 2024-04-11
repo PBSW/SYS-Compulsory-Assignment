@@ -40,7 +40,7 @@ public class UserUnitTests : IDisposable
      
 
         return mock;
-    } 
+    }
     
     private List<User> GetMockUsers()
     {
@@ -190,7 +190,10 @@ public class UserUnitTests : IDisposable
         // Arrange
         var mock = _moqRepository();
         var service = new Service.UserService(mock.Object);
+        
+        //Act
         var followers = service.GetFollowers(1);
+        
         
         // Assert
         Assert.NotNull(followers);
