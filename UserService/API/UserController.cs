@@ -8,7 +8,7 @@ namespace UserService.API;
 /// Api contoller for tweets
 /// </summary>
 [ApiController]
-[Route("api/user")]
+[Route("user")]
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -46,14 +46,14 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    [Route("{id}/follow/{followId}")]
+    [Route("/follow/{id}/{followId}")]
     public Task<ActionResult> FollowUser([FromRoute] int id, [FromRoute] int followId)
     {
         throw new NotImplementedException();
     }
     
     [HttpPost]
-    [Route("{id}/unfollow/{unfollowId}")]
+    [Route("/unfollow/{id}/{unfollowId}")]
     public async Task<ActionResult> UnfollowUser([FromRoute] int id, [FromRoute] int unfollowId)
     {
         try

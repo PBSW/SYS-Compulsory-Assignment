@@ -18,6 +18,8 @@ public class UserUpdateDTO
     /// </summary>
     public string? Password { get; set; }
     
+    public string? Email { get; set; }
+    
     /// <summary>
     /// The new profile description of the user
     /// </summary>

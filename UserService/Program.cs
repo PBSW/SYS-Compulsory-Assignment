@@ -14,7 +14,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
-    options.UseSqlServer("Host=postgres;Database=postgres;Username=postgres;Password=postgres");
+    options.UseSqlServer("Host=MySQL-user;database=db;user=database_user;password=Password1!;SslMode=Disabled");
 });
 
 //TODO

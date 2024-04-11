@@ -14,12 +14,34 @@ public class UserService : IUserService
     {
         _userRepository = userRepository;
     }
-
-    public async Task<User> Login(User user)
+    
+    public async Task<User> CreateUser(UserCreateDTO user)
     {
         var users = await _userRepository.All();
         
         var dbUser = users.Find(u => u.Username == user.Username);
+        
+        if (dbUser != null)
+        {
+            throw new Exception("User already exists");
+        }
+        
+        var newUser = new User()
+        {
+            Username = user.Username,
+            Followers = new List<User>(),
+            Following = new List<User>()
+        };
+        
+        return await _userRepository.Create(newUser);
+    }
+
+    public async Task<User> Login(LoginDTO user)
+    {
+        //TODO: FIX/IMPLEMENT
+        var users = await _userRepository.All();
+        
+        var dbUser = users.Find(u => u.Email == user.Email);
         
         if (dbUser == null)
         {
@@ -40,7 +62,7 @@ public class UserService : IUserService
             Expiration = DateTime.Now.AddHours(1)
         };
         
-        return await _userRepository.Update(user);
+        return await _userRepository.Update(dbUser);
     }
     
     public async Task<User> GetUser(int userId)

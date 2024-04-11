@@ -11,7 +11,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
-    options.UseSqlServer("Host=postgres;Database=postgres;Username=postgres;Password=postgres");
+    options.UseSqlServer("Host=MySQL-tweet;database=db;user=database_user;password=Password1!;SslMode=Disabled");
 });
 
 DependencyResolver.RegisterServices(builder.Services);

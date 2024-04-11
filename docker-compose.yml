@@ -7,18 +7,17 @@ services:
       context: .
       dockerfile: Gateway/Dockerfile
     ports:
-      - 8082:80
-
+      - "8082:8080"
 
   auth-service:
     build:
       context: .
       dockerfile: AuthService/Dockerfile
     ports:
-      - 8081:80
+      - "8081:8080"
     depends_on:
       gateway:
-        condition: service_healthy
+        condition: service_started
       rabbitmq:
         condition: service_healthy
   
@@ -28,10 +27,10 @@ services:
       context: .
       dockerfile: UserService/Dockerfile
     ports:
-      - 8083:80
+      - "8083:8080"
     depends_on:
       gateway:
-        condition: service_healthy
+        condition: service_started
       rabbitmq:
         condition: service_healthy
   
@@ -40,10 +39,10 @@ services:
       context: .
       dockerfile: TweetService/Dockerfile
     ports:
-      - 8084:80
+      - "8084:8080"
     depends_on:
       gateway:
-        condition: service_healthy
+        condition: service_started
       rabbitmq:
         condition: service_healthy
   
@@ -59,7 +58,7 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-
+  
   user-sql:
     container_name: MySQL-user
     image: mysql:5.7
@@ -114,8 +113,8 @@ services:
   seq:
     image: datalust/seq
     ports:
-      - 5341:5341
-      - 5342:80
+      - "5341:5341"
+      - "5342:80"
     volumes:
       - rps_seq_data:/data
     environment:
@@ -125,7 +124,7 @@ services:
   zipkin:
     image: openzipkin/zipkin
     ports:
-      - 9411:9411
+      - "9411:9411"
     environment:
       - STORAGE_TYPE=mysql
       - MYSQL_HOST=zipkin-storage
@@ -138,6 +137,10 @@ services:
     image: openzipkin/zipkin-mysql
     volumes:
       - zipkin_data:/mysql/data
+        
+        
+
+    
   
 volumes:
     auth-service-vol:

@@ -7,7 +7,7 @@ namespace AuthService.API;
 
 [Authorize]
 [ApiController]
-[Route("api/auth")]
+[Route("auth")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -18,7 +18,7 @@ public class AuthController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost ("Login")]
+    [HttpPost ("login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO dto)
     {
         try
@@ -32,7 +32,7 @@ public class AuthController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost("Register")]
+    [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDTO dto)
     {
         try
