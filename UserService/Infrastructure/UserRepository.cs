@@ -11,6 +11,7 @@ public class UserRepository : IUserRepository
     public UserRepository(DatabaseContext context)
     {
         _context = context;
+        _context.Database.EnsureCreated();
     }
     
     public async Task<List<User>> All()

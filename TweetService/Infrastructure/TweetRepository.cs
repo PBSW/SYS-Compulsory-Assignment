@@ -11,6 +11,7 @@ public class TweetRepository : ITweetRepository
     public TweetRepository(DatabaseContext context)
     {
         _context = context;
+        _context.Database.EnsureCreated();
     }
 
     public async Task<List<Tweet>> AllFrom(int id)

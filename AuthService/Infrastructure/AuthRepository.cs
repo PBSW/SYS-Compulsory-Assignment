@@ -10,6 +10,7 @@ public class AuthRepository : IAuthRepository
     public AuthRepository(DatabaseContext context)
     {
         _context = context;
+        _context.Database.EnsureCreated();
     }
     
     public async Task Register(AuthUser authUser)
