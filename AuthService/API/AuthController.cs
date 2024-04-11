@@ -46,7 +46,7 @@ public class AuthController : ControllerBase
         
         try
         {
-            return Ok(_authService.Register(dto));
+            return Ok(await _authService.Register(dto));
         }
         catch (Exception e)
         {

@@ -56,6 +56,11 @@ public class AuthService : IAuthService
         
         User user = await _authRepository.GetUserId(authUser.Username);
         
+        if (user == null)
+        {
+            throw new NullReferenceException("User not found in user service");
+        }
+        
         string token = _jwtProvider.GenerateToken(user.Id, user.Username);
         
         return await Task.FromResult<IActionResult>(new OkObjectResult(token));
@@ -91,7 +96,6 @@ public class AuthService : IAuthService
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.Authenticate");
-        
         Monitoring.Log.Debug("AuthService.Authenticate called");
         
         if (user == null) return false;
