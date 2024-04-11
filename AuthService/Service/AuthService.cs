@@ -1,17 +1,13 @@
 
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using AuthService.Infrastructure;
 using AuthService.Service.Helpers;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Domain;
 using Shared.User;
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
 using Shared.Monitoring;
-using Shared.Util;
+
 
 
 namespace AuthService.Service;
@@ -43,7 +39,6 @@ public class AuthService : IAuthService
 
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.ValidateToken");
-        activity?.SetTag("token", token);
         
         Monitoring.Log.Debug("AuthService.ValidateToken called");
 
@@ -65,7 +60,6 @@ public class AuthService : IAuthService
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.GenerateToken");
-        activity?.SetTag("userId", userId.ToString());
 
         Monitoring.Log.Debug("AuthService.GenerateToken called");
         
@@ -85,7 +79,6 @@ public class AuthService : IAuthService
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.Authenticate");
-        activity?.SetTag("token", token);
         
         Monitoring.Log.Debug("AuthService.Authenticate called");
         
@@ -100,8 +93,6 @@ public class AuthService : IAuthService
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.HashPassword");
-        activity?.SetTag("password", password);
-        
         Monitoring.Log.Debug("AuthService.HashPassword called");
         
         return RandomNumberGenerator.GetBytes(keySize);

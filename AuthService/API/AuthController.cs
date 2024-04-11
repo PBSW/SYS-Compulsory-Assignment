@@ -1,6 +1,7 @@
 ﻿using AuthService.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Monitoring;
 using Shared.User;
 
 namespace AuthService.API;
@@ -21,6 +22,10 @@ public class AuthController : ControllerBase
     [HttpPost ("login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO dto)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Controller.Login");
+        Monitoring.Log.Debug("AuthController.Login called");
+        
         try
         {
             return Ok(await _authService.Login(dto));
@@ -35,6 +40,10 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDTO dto)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Controller.Register");
+        Monitoring.Log.Debug("AuthController.Register called");
+        
         try
         {
             return Ok(_authService.Register(dto));

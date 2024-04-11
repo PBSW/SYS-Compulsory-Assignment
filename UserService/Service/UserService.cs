@@ -2,7 +2,6 @@
 using Shared.Messages.AuthMessages;
 using Shared.User;
 using Shared.Monitoring;
-using Shared.Util;
 
 using UserService.Infrastructure;
 

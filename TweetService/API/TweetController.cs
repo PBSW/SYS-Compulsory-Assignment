@@ -25,7 +25,7 @@ public class TweetController : ControllerBase
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("TweetService.API.GetTweetsFromUser");
-        activity?.SetTag("user_id", user_id.ToString());
+        activity?.SetTag("user_id", uid.ToString());
         
         Monitoring.Log.Debug("TweetController.GetTweetsFromUser called");
         throw new NotImplementedException("TweetService.API.GetTweetsFromUser not implemented");

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shared.User;
 using Shared.Monitoring;
-using Shared.User.Dto;
 using UserService.Service;
 
 namespace UserService.API;
@@ -43,7 +42,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut]
-    public Task<ActionResult<UserDTO>> UpdateUser(UserUpdateDTO user)
+    public async Task<ActionResult<UserDTO>> UpdateUser(UserUpdateDTO user)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("UserService.UpdateUser");
@@ -111,7 +110,7 @@ public class UserController : ControllerBase
 
     [HttpPost]
     [Route("/follow/{id}/{followId}")]
-    public Task<ActionResult> FollowUser([FromRoute] int id, [FromRoute] int followId)
+    public async Task<ActionResult> FollowUser([FromRoute] int id, [FromRoute] int followId)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("UserService.FollowUser");
