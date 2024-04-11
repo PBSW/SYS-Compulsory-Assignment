@@ -5,13 +5,5 @@ namespace Shared.User;
 /// </summary>
 public class UserCreateDTO
 {
-    
-
-    /// <summary>
-    /// the users new handle 
-    /// </summary>
     public string Username { get; set; }   
-    
-
-
 }

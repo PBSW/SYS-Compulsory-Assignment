@@ -80,7 +80,7 @@ public class AuthService : IAuthService
         AuthUser authUser = _mapper.Map<RegisterDTO, AuthUser>(dto);
         
         authUser.salt = GenerateSalt();
-        authUser.hashedPassword = await _passwordHasher.HashPassword(dto.Password, authUser.salt);
+        authUser.hashedPassword = await _passwordHasher.HashPassword(dto.plainPassword, authUser.salt);
         
         var change = await _authRepository.Register(authUser);
 
