@@ -1,10 +1,14 @@
-﻿using System.Security.Cryptography;
+
+using System.Security.Cryptography;
 using AuthService.Infrastructure;
 using AuthService.Service.Helpers;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Domain;
 using Shared.User;
+using Shared.Monitoring;
+
+
 
 namespace AuthService.Service;
 
@@ -24,29 +28,27 @@ public class AuthService : IAuthService
         IAuthRepository authRepository,
         IMapper mapper)
     {
-        _jwtProvider = jwtProvider ?? throw new NullReferenceException("JWTProvider is null");
-        _passwordHasher = passwordHasher ?? throw new NullReferenceException("PasswordHasher is null");
-        _authRepository = authRepository ?? throw new NullReferenceException("AuthRepository is null");
-        _mapper = mapper ?? throw new NullReferenceException("Mapper is null");
+        _jwtProvider = jwtProvider;
+        _passwordHasher = passwordHasher;
+        _authRepository = authRepository;
+        _mapper = mapper;
     }
 
     public async Task<IActionResult> Login(LoginDTO dto)
     { 
-        if (dto == null)
-            throw new ArgumentException("LoginDTO is null");
+
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.ValidateToken");
         
+        Monitoring.Log.Debug("AuthService.ValidateToken called");
+
         AuthUser user = await _authRepository.FindUser(dto.Email);
-        
-        if (user == null)
-        {
-            throw new ArgumentException("User not found");
-        }
         
         bool isAuthenticated = await Authenticate(dto.plainPassword, user);
         
         if (!isAuthenticated)
         {
-            throw new ArgumentException("Invalid password");
+            return await Task.FromResult<IActionResult>(new UnauthorizedResult());
         }
         
         string token = _jwtProvider.GenerateToken(user.Username);
@@ -56,8 +58,11 @@ public class AuthService : IAuthService
 
     public async Task<IActionResult> Register(RegisterDTO dto)
     {
-        if (dto == null)
-            throw new ArgumentException("RegisterDTO is null");
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.GenerateToken");
+
+        Monitoring.Log.Debug("AuthService.GenerateToken called");
+        
         
         AuthUser authUser = _mapper.Map<RegisterDTO, AuthUser>(dto);
         
@@ -66,12 +71,17 @@ public class AuthService : IAuthService
         authUser.hashedPassword = await _passwordHasher.HashPassword(dto.Password, authUser.salt);
         
         await _authRepository.Register(authUser);
-        
+
         return await Task.FromResult<IActionResult>(new OkResult());
     }
 
     private async Task<bool> Authenticate(string plainTextPassword, AuthUser user)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.Authenticate");
+        
+        Monitoring.Log.Debug("AuthService.Authenticate called");
+        
         if (user == null) return false;
         
         var hashedPassword = await _passwordHasher.HashPassword(plainTextPassword, user.salt);
@@ -81,6 +91,10 @@ public class AuthService : IAuthService
 
     private byte[] GenerateSalt()
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.HashPassword");
+        Monitoring.Log.Debug("AuthService.HashPassword called");
+        
         return RandomNumberGenerator.GetBytes(keySize);
     }
 }
