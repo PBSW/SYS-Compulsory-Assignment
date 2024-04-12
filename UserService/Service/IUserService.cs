@@ -7,9 +7,10 @@ public interface IUserService
 {
     public Task<bool> CreateUser(UserCreateDTO user);
     
-    public Task<User> GetUser(int userId);
+    public Task<UserDTO> GetUser(int userId);
     
     public Task<User> UpdateUser(UserUpdateDTO user);
     
     public Task DeleteUser(int userId);
+    public Task<UserDTO> GetUserByUsername(string username);
 }

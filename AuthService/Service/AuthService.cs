@@ -54,14 +54,14 @@ public class AuthService : IAuthService
             return await Task.FromResult<IActionResult>(new UnauthorizedResult());
         }
         
-        User user = await _authRepository.GetUserId(authUser.username);
+        UserDTO user = await _authRepository.GetUserId(authUser.username);
         
         if (user == null)
         {
             throw new NullReferenceException("User not found in user service");
         }
         
-        string token = _jwtProvider.GenerateToken(user.Id, user.Username);
+        string token = _jwtProvider.GenerateToken(user.id, user.username);
         
         return await Task.FromResult<IActionResult>(new OkObjectResult(token));
     }

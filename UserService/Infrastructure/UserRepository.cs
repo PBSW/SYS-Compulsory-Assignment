@@ -96,4 +96,16 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
         return updated.Entity;
     }
+
+    public Task<User> UserByUsername(string username)
+    {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("UserService.Infrastructure.SingleByUsername");
+        activity?.SetTag("username", username);
+        
+        Monitoring.Log.Debug("UserRepository.SingleByUsername called");
+        
+        var user = _context.Users.FirstOrDefault(u => u.Username == username);
+        return Task.FromResult(user);
+    }
 }

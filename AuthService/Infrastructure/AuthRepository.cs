@@ -61,7 +61,7 @@ public class AuthRepository : IAuthRepository
         return await _context.AuthUsers.FirstOrDefaultAsync(user => user.email.Equals(user.email));
     }
 
-    public async Task<User> GetUserId(string username)
+    public async Task<UserDTO> GetUserId(string username)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthRepository.GetUserId");
@@ -69,7 +69,7 @@ public class AuthRepository : IAuthRepository
         
         // Set up HTTP client
         var client = new RestClient(BaseUrl);
-        var request = new RestRequest("user/create", Method.Post);
+        var request = new RestRequest("user/", Method.Post);
         request.AddHeader("Content-Type", "application/json");
         
         // Execute HTTP request and await the result
@@ -78,7 +78,7 @@ public class AuthRepository : IAuthRepository
         // Check if the HTTP response was successful
         if (response.IsSuccessStatusCode && response.Content != null)
         {
-            return JsonConvert.DeserializeObject<User>(response.Content);
+            return JsonConvert.DeserializeObject<UserDTO>(response.Content);
         }
 
         // Return false if the HTTP request failed or the user creation was not successful

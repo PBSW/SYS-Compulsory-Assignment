@@ -31,9 +31,7 @@ public class UserController : ControllerBase
         {
             Monitoring.Log.Debug("UserService.API.GetUser called");
 
-            var user = await _userService.GetUser(id);
-            
-            return BadRequest("GetUser endpoint - Not implemented");
+            return await _userService.GetUser(id);
         }
         catch (Exception e)
         {
@@ -42,6 +40,26 @@ public class UserController : ControllerBase
         }
     }
 
+    [HttpGet("username/{username}")]
+    public async Task<ActionResult<UserDTO>> GetUser([FromRoute] string username)
+    {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("UserService.GetUser");
+        activity?.SetTag("username", username);
+
+        try
+        {
+            Monitoring.Log.Debug("UserService.API.GetUser called");
+
+            return await _userService.GetUserByUsername(username);
+        }
+        catch (Exception e)
+        {
+            Monitoring.Log.Error("Error in UserService.API.GetUser", e);
+            throw;
+        }
+    }
+    
     [HttpPost ("create")]
     public async Task<ActionResult<UserDTO>> CreateUser(UserCreateDTO user)
     {

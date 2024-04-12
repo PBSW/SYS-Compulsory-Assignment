@@ -36,7 +36,7 @@ public class UserService : IUserService
         return await _userRepository.Create(dbUser);
     }
 
-    public async Task<User> GetUser(int userId)
+    public async Task<UserDTO> GetUser(int userId)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("UserService.GetUser");
@@ -49,7 +49,11 @@ public class UserService : IUserService
             throw new NullReferenceException("User id is invalid");
         }
         
-        return await _userRepository.Single(userId);
+        User user = await _userRepository.Single(userId);
+        
+        UserDTO userDto = _mapper.Map<User, UserDTO>(user);
+        
+        return userDto;
     }
 
     public async Task<User> UpdateUser(UserUpdateDTO user)
@@ -91,5 +95,20 @@ public class UserService : IUserService
         
         
         await _userRepository.Delete(userId);
+    }
+
+    public async Task<UserDTO> GetUserByUsername(string username)
+    {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("UserService.GetUserByUsername");
+        activity?.SetTag("username", username);
+        
+        Monitoring.Log.Debug("UserService.GetUserByUsername called");
+        
+        User user = await _userRepository.UserByUsername(username);
+
+        UserDTO userDto = _mapper.Map<User, UserDTO>(user);
+
+        return userDto;
     }
 }
