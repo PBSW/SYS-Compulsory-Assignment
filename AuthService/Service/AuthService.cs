@@ -40,7 +40,7 @@ public class AuthService : IAuthService
         using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.ValidateToken");
         Monitoring.Log.Debug("AuthService.ValidateToken called");
 
-        AuthUser authUser = await _authRepository.FindUser(dto.Email);
+        AuthUser authUser = await _authRepository.FindUser(dto.email);
         
         if (authUser == null)
         {
@@ -54,7 +54,7 @@ public class AuthService : IAuthService
             return await Task.FromResult<IActionResult>(new UnauthorizedResult());
         }
         
-        User user = await _authRepository.GetUserId(authUser.Username);
+        User user = await _authRepository.GetUserId(authUser.username);
         
         if (user == null)
         {
@@ -66,30 +66,30 @@ public class AuthService : IAuthService
         return await Task.FromResult<IActionResult>(new OkObjectResult(token));
     }
 
-    public async Task<IActionResult> Register(RegisterDTO dto)
+    public async Task<bool> Register(RegisterDTO dto)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.GenerateToken");
         Monitoring.Log.Debug("AuthService.GenerateToken called");
 
+        // Check if the DTO is null
         if (dto == null)
         {
             throw new ArgumentNullException("Dto is null");
         }
         
+        // Map the DTO to the AuthUser model
         AuthUser authUser = _mapper.Map<RegisterDTO, AuthUser>(dto);
         
+        
+        // Generate a salt and hash the password
         authUser.salt = GenerateSalt();
         authUser.hashedPassword = await _passwordHasher.HashPassword(dto.plainPassword, authUser.salt);
         
-        var change = await _authRepository.Register(authUser);
-
-        if (change == 0)
-        {
-            return await Task.FromResult<IActionResult>(new BadRequestResult());
-        }
+        // Map the AuthUser model to the UserCreateDTO model
+        UserCreateDTO userDTO = _mapper.Map<AuthUser, UserCreateDTO>(authUser);
         
-        return await Task.FromResult<IActionResult>(new OkResult());
+        return await _authRepository.Register(authUser, userDTO);
     }
 
     private async Task<bool> Authenticate(string plainTextPassword, AuthUser user)

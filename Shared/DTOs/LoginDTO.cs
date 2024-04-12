@@ -5,13 +5,6 @@ namespace Shared.User;
 /// </summary>
 public class LoginDTO
 {
-    /// <summary>
-    /// The email of the user
-    /// </summary>
-    public string Email { get; set; }
-
-    /// <summary>
-    /// The hashed password of the user
-    /// </summary>
+    public string email { get; set; }
     public string plainPassword { get; set; }
 }

@@ -18,15 +18,29 @@ public class UserService : IUserService
         _mapper = mapper;
     }
     
-    public async Task<User> CreateUser(UserCreateDTO user)
+    public async Task<bool> CreateUser(UserCreateDTO user)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("UserService.Login");
-        activity?.SetTag("user", user.Username);
+        activity?.SetTag("user", user.username);
         
         Monitoring.Log.Debug("UserService.Login called");
+
+        if (user == null)
+        {
+            throw new NullReferenceException("User is null");
+        }
         
+        var dbUser = _mapper.Map<User>(user);
         
+        var reponse = await _userRepository.Create(dbUser);
+        
+        if (reponse == 0)
+        {
+            return false;
+        }
+        
+        return true;
     }
 
     public async Task<User> GetUser(int userId)
@@ -37,6 +51,10 @@ public class UserService : IUserService
         
         Monitoring.Log.Debug("UserService.GetUser called");
         
+        if (userId == null || userId <= 0)
+        {
+            throw new NullReferenceException("User id is invalid");
+        }
         
         return await _userRepository.Single(userId);
     }

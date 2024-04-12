@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using RestSharp;
 using Shared.Domain;
+using Shared.User;
 
 namespace AuthService.Infrastructure;
 
@@ -16,11 +17,38 @@ public class AuthRepository : IAuthRepository
         _context.Database.EnsureCreated();
     }
     
-    public async Task<int> Register(AuthUser authUser)
+    public async Task<bool> Register(AuthUser authUser, UserCreateDTO userDTO)
     {
-        _context.AuthUsers.Add(authUser);
-        var change = await _context.SaveChangesAsync();
-        return change;
+        // Set up HTTP client
+        var client = new RestClient(BaseUrl);
+        var request = new RestRequest("users/create", Method.Post);
+        request.AddHeader("Content-Type", "application/json");
+
+        // Serialize the DTO to JSON using Newtonsoft.Json and add to request body
+        string jsonBody = JsonConvert.SerializeObject(userDTO);
+        request.AddParameter("application/json", jsonBody, ParameterType.RequestBody);
+
+        // Execute HTTP request and await the result
+        var response = await client.ExecuteAsync(request);
+
+        // Check if the HTTP response was successful
+        if (response.IsSuccessStatusCode && response.Content != null)
+        {
+            bool isSuccess = JsonConvert.DeserializeObject<bool>(response.Content);
+
+            if (isSuccess)
+            {
+                // Add user to the auth database only if the remote service returned true
+                _context.AuthUsers.Add(authUser);
+                var changes = await _context.SaveChangesAsync();
+
+                // Return true if at least one record was changed in the database
+                return changes > 0;
+            }
+        }
+
+        // Return false if the HTTP request failed or the user creation was not successful
+        return false;
     }
     
     public async Task<AuthUser> FindUser(string username)

@@ -25,7 +25,7 @@ public class UserRepository : IUserRepository
         return users;
     }
 
-    public async Task<User> Create(User user)
+    public async Task<int> Create(User user)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("UserService.Infrastructure.Create");
@@ -34,8 +34,7 @@ public class UserRepository : IUserRepository
         Monitoring.Log.Debug("UserRepository.Create called");
         
         var added = await _context.Users.AddAsync(user);
-        await _context.SaveChangesAsync();
-        return added.Entity;
+        return await _context.SaveChangesAsync();
     }
 
     public async Task<bool> Delete(int id)
