@@ -33,14 +33,7 @@ public class UserService : IUserService
         
         var dbUser = _mapper.Map<User>(user);
         
-        var reponse = await _userRepository.Create(dbUser);
-        
-        if (reponse == 0)
-        {
-            return false;
-        }
-        
-        return true;
+        return await _userRepository.Create(dbUser);
     }
 
     public async Task<User> GetUser(int userId)

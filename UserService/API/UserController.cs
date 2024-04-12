@@ -42,6 +42,26 @@ public class UserController : ControllerBase
         }
     }
 
+    [HttpPost ("create")]
+    public async Task<ActionResult<UserDTO>> CreateUser(UserCreateDTO user)
+    {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("UserService.CreateUser");
+        activity?.SetTag("user", user.username);
+
+        try
+        {
+            Monitoring.Log.Debug("UserService.API.CreateUser called");
+            
+            return Ok(await _userService.CreateUser(user));
+        }
+        catch (Exception e)
+        {
+            Monitoring.Log.Error("Error in UserService.API.CreateUser", e);
+            return BadRequest("Error in creating user:" + e.Message);
+        }
+    }
+    
     [HttpPut]
     public async Task<ActionResult<UserDTO>> UpdateUser(UserUpdateDTO user)
     {

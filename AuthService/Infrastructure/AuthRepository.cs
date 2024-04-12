@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using RestSharp;
 using Shared.Domain;
+using Shared.Monitoring;
 using Shared.User;
 
 namespace AuthService.Infrastructure;
@@ -9,7 +10,7 @@ namespace AuthService.Infrastructure;
 public class AuthRepository : IAuthRepository
 {
     private readonly DatabaseContext _context;
-    private string BaseUrl = "http://user-service:8083";
+    private string BaseUrl = "http://user-service:8080";
     
     public AuthRepository(DatabaseContext context)
     {
@@ -19,9 +20,13 @@ public class AuthRepository : IAuthRepository
     
     public async Task<bool> Register(AuthUser authUser, UserCreateDTO userDTO)
     {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthRepository.Register");
+        Monitoring.Log.Debug("AuthRepository.Register called");
+        
         // Set up HTTP client
         var client = new RestClient(BaseUrl);
-        var request = new RestRequest("users/create", Method.Post);
+        var request = new RestRequest("user/create", Method.Post);
         request.AddHeader("Content-Type", "application/json");
 
         // Serialize the DTO to JSON using Newtonsoft.Json and add to request body
@@ -48,7 +53,7 @@ public class AuthRepository : IAuthRepository
         }
 
         // Return false if the HTTP request failed or the user creation was not successful
-        return false;
+        throw new Exception("Unable to connect to UserService.");
     }
     
     public async Task<AuthUser> FindUser(string username)
@@ -58,20 +63,25 @@ public class AuthRepository : IAuthRepository
 
     public async Task<User> GetUserId(string username)
     {
-        var options = new RestClientOptions(BaseUrl)
-        {
-            ThrowOnAnyError = false,
-            MaxTimeout = 6000
-        };
-        var client = new RestClient(options);
-        var request = new RestRequest().AddHeader("Content-Type", "application/json");
-        request.Method = Method.Get;
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthRepository.GetUserId");
+        Monitoring.Log.Debug("AuthRepository.GetUserId called");
         
-        var response = client.Execute(request);
-        if (response is { IsSuccessStatusCode: true, Content: not null })
+        // Set up HTTP client
+        var client = new RestClient(BaseUrl);
+        var request = new RestRequest("user/create", Method.Post);
+        request.AddHeader("Content-Type", "application/json");
+        
+        // Execute HTTP request and await the result
+        var response = await client.ExecuteAsync(request);
+
+        // Check if the HTTP response was successful
+        if (response.IsSuccessStatusCode && response.Content != null)
         {
-            User user = await Task.Run(() => JsonConvert.DeserializeObject<User>(response.Content));
+            return JsonConvert.DeserializeObject<User>(response.Content);
         }
-        return null;
+
+        // Return false if the HTTP request failed or the user creation was not successful
+        throw new Exception("Unable to connect to UserService.");
     }
 }

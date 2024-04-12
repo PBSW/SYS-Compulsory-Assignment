@@ -21,18 +21,6 @@ public class DatabaseContext : DbContext
             .Property(i => i.Id)
             .ValueGeneratedOnAdd();
         
-        modelBuilder.Entity<User>()
-            .HasMany<User>(User => User.Following)
-            .WithOne()
-            .HasForeignKey(user => user.Id)
-            .HasConstraintName("FK_User_Following");
-        
-        modelBuilder.Entity<User>()
-            .HasMany<User>(User => User.Followers)
-            .WithOne()
-            .HasForeignKey(user => user.Id)
-            .HasConstraintName("FK_User_Followers");
-        
         //Ensure unique usernames
         modelBuilder.Entity<User>()
             .HasIndex(i => i.Username)

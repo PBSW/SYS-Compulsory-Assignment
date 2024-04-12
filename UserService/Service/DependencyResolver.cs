@@ -11,5 +11,7 @@ public class DependencyResolver
     {
         serviceCollection.AddScoped<IUserService, UserService>();
         serviceCollection.AddScoped<IUserRepository, UserRepository>();
+        
+        serviceCollection.AddAutoMapper(typeof(Program).Assembly);
     }
 }
