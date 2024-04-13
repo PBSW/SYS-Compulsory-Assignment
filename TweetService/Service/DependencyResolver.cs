@@ -12,6 +12,8 @@ public class DependencyResolver
     }
     public static void RegisterServices(IServiceCollection serviceCollection)
     {
+        serviceCollection.AddAutoMapper(typeof(Program).Assembly);
+        
         serviceCollection.AddScoped<ITweetService, TweetService>();
         serviceCollection.AddScoped<ITweetRepository, TweetRepository>();
     }

@@ -48,7 +48,7 @@ public class TweetService : ITweetService
         Monitoring.Log.Debug("TweetService.GetTweetsFromUser called");
 
 
-        return await _tweetRepository.AllFrom(uid);
+        throw new NotImplementedException();
     }
 
     public async Task<TweetDTO> GetAllTweets()
@@ -58,7 +58,7 @@ public class TweetService : ITweetService
         Monitoring.Log.Debug("TweetService.GetRecentTweets called");
         
         
-        
+        throw new NotImplementedException();
     }
 
     public async Task<bool> Delete(int id)
