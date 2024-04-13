@@ -4,8 +4,8 @@ using AuthService.Service.Helpers;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Domain;
-using Shared.User;
 using Shared.Monitoring;
+using Shared.User;
 
 
 
