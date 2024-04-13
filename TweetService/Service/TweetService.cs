@@ -41,7 +41,7 @@ public class TweetService : ITweetService
         return tweetDto;
     }
 
-    public async Task<TweetDTO> GetTweetsFromUser(int uid)
+    public async Task<List<TweetDTO>> GetTweetsFromUser(int uid)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("TweetService.Service.GetTweetsFromUser");
@@ -54,6 +54,12 @@ public class TweetService : ITweetService
             Monitoring.Log.Error("User id is invalid");
             throw new NullReferenceException("User id is invalid");
         }
+        
+        List<Tweet> tweets = await _tweetRepository.AllFrom(uid);
+        
+        List<TweetDTO> tweetDtos = _mapper.Map<List<Tweet>, List<TweetDTO>>(tweets);
+
+        return tweetDtos;
     }
 
     public async Task<TweetDTO> GetAllTweets()
