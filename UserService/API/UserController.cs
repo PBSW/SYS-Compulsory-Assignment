@@ -65,7 +65,7 @@ public class UserController : ControllerBase
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("UserService.CreateUser");
-        activity?.SetTag("user", user.username);
+        activity?.SetTag("user", user.Username);
 
         try
         {
@@ -85,7 +85,7 @@ public class UserController : ControllerBase
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("UserService.UpdateUser");
-        activity?.SetTag("userId", user.UserId.ToString());
+        activity?.SetTag("userId", user.Id.ToString());
 
         try
         {

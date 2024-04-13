@@ -5,38 +5,8 @@
 /// </summary>
 public class Tweet
 {
-    /// <summary>
-    /// The id of the tweet
-    /// </summary>
     public int Id { get; set; }
-    
-    /// <summary>
-    /// The text content of the tweet
-    /// </summary>
     public string Content { get; set; } = null!;
-
-    /// <summary>
-    /// The id of the user who created this tweet
-    /// </summary>
     public int AuthorId { get; set; }
-
-    /// <summary>
-    /// The timestamp of when this tweet was created
-    /// </summary>
     public DateTime CreatedAt { get; set; }
-
-    /// <summary>
-    /// A list of user ids of everyone who has liked this tweet
-    /// </summary>
-    public List<int> Likes { get; set; } = [];
-
-    /// <summary>
-    /// A list of comments to this tweet
-    /// </summary>
-    public List<Tweet> Replies { get; set; } = [];
-    
-    /// <summary>
-    /// The parent tweet if this is a comment
-    /// </summary>
-    public Tweet? ReplyTo { get; set; }
 }

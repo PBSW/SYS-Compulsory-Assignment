@@ -5,6 +5,6 @@ namespace Shared.User;
 /// </summary>
 public class UserCreateDTO
 {
-    public string username { get; set; }   
-    public string email { get; set; }
+    public string Username { get; set; }   
+    public string Email { get; set; }
 }

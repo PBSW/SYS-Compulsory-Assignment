@@ -5,7 +5,7 @@ namespace Shared.User;
 /// </summary>
 public class RegisterDTO 
 {
-    public string email { get; set; }
-    public string username { get; set; }   
-    public string plainPassword { get; set; }
+    public string Email { get; set; }
+    public string Username { get; set; }   
+    public string PlainPassword { get; set; }
 } 

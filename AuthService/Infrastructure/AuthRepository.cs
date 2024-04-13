@@ -60,7 +60,7 @@ public class AuthRepository : IAuthRepository
     public async Task<AuthUser> FindUser(string username)
     {
         //var authSet = _context.Set<AuthUser>();
-        return await _context.AuthUsers.FirstOrDefaultAsync(user => user.email.Equals(user.email));
+        return await _context.AuthUsers.FirstOrDefaultAsync(user => user.Email.Equals(user.Email));
     }
 
     public async Task<UserDTO> GetUserId(string username)

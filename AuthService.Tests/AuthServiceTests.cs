@@ -23,8 +23,8 @@ public class AuthServiceTests : IAsyncLifetime
         string jsonBody = JsonConvert.SerializeObject(
             new UserCreateDTO()
             {
-                email = "test@mail.com",
-                username = "test"
+                Email = "test@mail.com",
+                Username = "test"
             }
         );
 
@@ -63,15 +63,15 @@ public class AuthServiceTests : IAsyncLifetime
         var mockRepository = new AuthRepository(mockContext.Object);
         var authUser = new AuthUser()
         {
-            email = "test@mail.com",
-            username = "test",
-            hashedPassword = "test",
-            salt = Encoding.ASCII.GetBytes("test")
+            Email = "test@mail.com",
+            Username = "test",
+            HashedPassword = "test",
+            Salt = Encoding.ASCII.GetBytes("test")
         };
         var userDTO = new UserCreateDTO()
         {
-            email = "test@mail.com",
-            username = "test"
+            Email = "test@mail.com",
+            Username = "test"
         };
 
         // Act

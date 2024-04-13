@@ -22,7 +22,7 @@ public class UserService : IUserService
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("UserService.Login");
-        activity?.SetTag("user", user.username);
+        activity?.SetTag("user", user.Username);
         
         Monitoring.Log.Debug("UserService.Login called");
 
@@ -60,21 +60,16 @@ public class UserService : IUserService
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("UserService.UpdateUser");
-        activity?.SetTag("userId", user.UserId.ToString());
+        activity?.SetTag("userId", user.Id.ToString());
         
         Monitoring.Log.Debug("UserService.UpdateUser called");
         
         
-        var dbUser = await _userRepository.Single(user.UserId);
+        var dbUser = await _userRepository.Single(user.Id);
         
         if (user.Username != null)
         {
             dbUser.Username = user.Username;
-        }
-        
-        if (user.Bio != null)
-        {
-            dbUser.Bio = user.Bio;
         }
         
         return await _userRepository.Update(dbUser);

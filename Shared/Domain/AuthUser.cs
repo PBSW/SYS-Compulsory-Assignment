@@ -2,8 +2,8 @@
 
 public class AuthUser
 {
-    public string email { get; set; } = null!;
-    public string hashedPassword { get; set; } = null!;
-    public byte[] salt { get; set; } = null!;
-    public string username { get; set; } = null!;
+    public string Email { get; set; } = null!;
+    public string HashedPassword { get; set; } = null!;
+    public byte[] Salt { get; set; } = null!;
+    public string Username { get; set; } = null!;
 }

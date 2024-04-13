@@ -6,8 +6,6 @@ namespace Shared.Tweet.Dto;
 /// </summary>
 public class TweetCreate
 {
-    /// <summary>
-    /// The text content of the tweet
-    /// </summary>
     public string Content { get; set; } = null!;
+    public int AuthorId { get; set; }
 }

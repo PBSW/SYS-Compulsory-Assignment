@@ -10,7 +10,7 @@ public class DatabaseContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AuthUser>()
-            .HasKey(l => l.username);
+            .HasKey(l => l.Username);
     }
     
     public DbSet<AuthUser> AuthUsers { get; set; }

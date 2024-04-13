@@ -94,8 +94,8 @@ public class UserUnitTests : IDisposable
         var service = new Service.UserService(mock.Object, GetMapper());
         var user = new UserCreateDTO()
         {
-            email = "mail5@mail.com",
-            username = "test",
+            Email = "mail5@mail.com",
+            Username = "test",
         };
         
         // Act
@@ -118,7 +118,7 @@ public class UserUnitTests : IDisposable
         
         // Assert
         Assert.NotNull(user);
-        Assert.Equal(1, user.Result.id);
+        Assert.Equal(1, user.Result.Id);
     }
     
     [Fact]
@@ -129,7 +129,7 @@ public class UserUnitTests : IDisposable
         var service = new Service.UserService(mock.Object, GetMapper());
         var user = new UserUpdateDTO()
         {
-            UserId = 1,
+            Id = 1,
             Username = "update-test",
             Bio = "new bio",
         };

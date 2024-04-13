@@ -39,28 +39,28 @@ public class AuthService : IAuthService
         using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.ValidateToken");
         Monitoring.Log.Debug("AuthService.ValidateToken called");
 
-        AuthUser authUser = await _authRepository.FindUser(dto.email);
+        AuthUser authUser = await _authRepository.FindUser(dto.Email);
         
         if (authUser == null)
         {
             throw new ArgumentException("User not found");
         }
         
-        bool isAuthenticated = await Authenticate(dto.plainPassword, authUser);
+        bool isAuthenticated = await Authenticate(dto.PlainPassword, authUser);
         
         if (!isAuthenticated)
         {
             return await Task.FromResult<IActionResult>(new UnauthorizedResult());
         }
         
-        UserDTO user = await _authRepository.GetUserId(authUser.username);
+        UserDTO user = await _authRepository.GetUserId(authUser.Username);
         
         if (user == null)
         {
             throw new NullReferenceException("User not found in user service");
         }
         
-        string token = _jwtProvider.GenerateToken(user.id, user.username);
+        string token = _jwtProvider.GenerateToken(user.Id, user.Username);
         
         return await Task.FromResult<IActionResult>(new OkObjectResult(token));
     }
@@ -82,8 +82,8 @@ public class AuthService : IAuthService
         
         
         // Generate a salt and hash the password
-        authUser.salt = GenerateSalt();
-        authUser.hashedPassword = await _passwordHasher.HashPassword(dto.plainPassword, authUser.salt);
+        authUser.Salt = GenerateSalt();
+        authUser.HashedPassword = await _passwordHasher.HashPassword(dto.PlainPassword, authUser.Salt);
         
         // Map the AuthUser model to the UserCreateDTO model
         UserCreateDTO userDTO = _mapper.Map<AuthUser, UserCreateDTO>(authUser);
@@ -99,9 +99,9 @@ public class AuthService : IAuthService
         
         if (user == null) return false;
         
-        var hashedPassword = await _passwordHasher.HashPassword(plainTextPassword, user.salt);
+        var hashedPassword = await _passwordHasher.HashPassword(plainTextPassword, user.Salt);
         
-        return hashedPassword.Equals(user.hashedPassword);
+        return hashedPassword.Equals(user.HashedPassword);
     }
 
     private byte[] GenerateSalt()

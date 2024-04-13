@@ -5,6 +5,6 @@ namespace Shared.User;
 /// </summary>
 public class LoginDTO
 {
-    public string email { get; set; }
-    public string plainPassword { get; set; }
+    public string Email { get; set; }
+    public string PlainPassword { get; set; }
 }

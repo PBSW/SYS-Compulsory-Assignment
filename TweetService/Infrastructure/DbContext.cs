@@ -19,19 +19,6 @@ public class DatabaseContext : DbContext
         modelBuilder.Entity<Tweet>()
             .Property(i => i.Id)
             .ValueGeneratedOnAdd();
-        
-        modelBuilder.Entity<Tweet>()
-            .HasMany(i => i.Replies)
-            .WithOne()
-            .HasForeignKey(i => i.ReplyTo)
-            .HasConstraintName("FK_Tweet_Replies");
-
-        modelBuilder.Entity<Tweet>()
-            .Property(t => t.Likes)
-            .HasConversion(
-                v => string.Join(',', v),
-                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList()
-            );
     }
     
     public DbSet<Tweet> Tweets { get; set; }
