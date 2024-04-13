@@ -89,7 +89,7 @@ public class UserController : ControllerBase
         });
 
         Baggage.Current = parrentContext.Baggage;
-        using var activity = Monitoring.ActivitySource.StartActivity("Controller.User.GetUserByUsername received message", ActivityKind.Consumer, parrentContext.ActivityContext);
+        using var activity = Monitoring.ActivitySource.StartActivity("Controller.User.CreateUser received message", ActivityKind.Consumer, parrentContext.ActivityContext);
 
 
         try
