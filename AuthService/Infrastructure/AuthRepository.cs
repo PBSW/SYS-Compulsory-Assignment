@@ -29,6 +29,9 @@ public class AuthRepository : IAuthRepository
         var request = new RestRequest("user/create", Method.Post);
         request.AddHeader("Content-Type", "application/json");
 
+        // Propagate the trace context
+        PropagationHelper.Inject(request, activity);
+        
         // Serialize the DTO to JSON using Newtonsoft.Json and add to request body
         string jsonBody = JsonConvert.SerializeObject(userDTO);
         request.AddParameter("application/json", jsonBody, ParameterType.RequestBody);
@@ -73,6 +76,9 @@ public class AuthRepository : IAuthRepository
         var client = new RestClient(BaseUrl);
         var request = new RestRequest("user/", Method.Post);
         request.AddHeader("Content-Type", "application/json");
+        
+        // Propagate the trace context
+        PropagationHelper.Inject(request, activity);
         
         // Execute HTTP request and await the result
         var response = await client.ExecuteAsync(request);

@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using OpenTelemetry;
+using OpenTelemetry.Context.Propagation;
 using Shared.User;
 using Shared.Monitoring;
 using UserService.Service;
@@ -21,42 +24,56 @@ public class UserController : ControllerBase
 
     [HttpGet]
     [Route("/{id}")]
-    public async Task<ActionResult<UserDTO>> GetUser([FromRoute] int id)
+    public async Task<ActionResult<UserDTO>> GetUserById([FromRoute] int id)
     {
         //Monitoring and logging
-        using var activity = Monitoring.ActivitySource.StartActivity("UserService.GetUser");
-        activity?.SetTag("userId", id.ToString());
+        Monitoring.Log.Debug("UserService.API.GetUser called");
+        
+        var headers = Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString());
+        var propagator = new TraceContextPropagator();
+        var parrentContext = propagator.Extract(default, headers, (carrier, key) =>
+        {
+            return new List<string>(new[] { headers.ContainsKey(key) ? headers[key].ToString() : String.Empty });
+        });
 
+        Baggage.Current = parrentContext.Baggage;
+        using var activity = Monitoring.ActivitySource.StartActivity("Controller.User.GetUserById received message", ActivityKind.Consumer, parrentContext.ActivityContext);
+        
         try
         {
             Monitoring.Log.Debug("UserService.API.GetUser called");
-
             return await _userService.GetUser(id);
         }
         catch (Exception e)
         {
-            Monitoring.Log.Error("Error in UserService.API.GetUser", e);
-            throw;
+            Monitoring.Log.Error("Error in UserService.API.GetUser", e.Message);
+            return BadRequest("Error in getting user: " + e.Message);
         }
     }
 
     [HttpGet("username/{username}")]
-    public async Task<ActionResult<UserDTO>> GetUser([FromRoute] string username)
+    public async Task<ActionResult<UserDTO>> GetUserByUsername([FromRoute] string username)
     {
         //Monitoring and logging
-        using var activity = Monitoring.ActivitySource.StartActivity("UserService.GetUser");
-        activity?.SetTag("username", username);
+        var headers = Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString());
+        var propagator = new TraceContextPropagator();
+        var parrentContext = propagator.Extract(default, headers, (carrier, key) =>
+        {
+            return new List<string>(new[] { headers.ContainsKey(key) ? headers[key].ToString() : String.Empty });
+        });
 
+        Baggage.Current = parrentContext.Baggage;
+        using var activity = Monitoring.ActivitySource.StartActivity("Controller.User.GetUserByUsername received message", ActivityKind.Consumer, parrentContext.ActivityContext);
+        
         try
         {
             Monitoring.Log.Debug("UserService.API.GetUser called");
-
             return await _userService.GetUserByUsername(username);
         }
         catch (Exception e)
         {
-            Monitoring.Log.Error("Error in UserService.API.GetUser", e);
-            throw;
+            Monitoring.Log.Error("Error in UserService.API.GetUser", e.Message);
+            return BadRequest("Error in getting user: " + e.Message);
         }
     }
     
@@ -70,12 +87,11 @@ public class UserController : ControllerBase
         try
         {
             Monitoring.Log.Debug("UserService.API.CreateUser called");
-            
             return Ok(await _userService.CreateUser(user));
         }
         catch (Exception e)
         {
-            Monitoring.Log.Error("Error in UserService.API.CreateUser", e);
+            Monitoring.Log.Error("Error in UserService.API.CreateUser", e.Message);
             return BadRequest("Error in creating user:" + e.Message);
         }
     }
@@ -90,16 +106,12 @@ public class UserController : ControllerBase
         try
         {
             Monitoring.Log.Debug("UserService.API.UpdateUser called");
-
-            var updatedUser = _userService.UpdateUser(user);
-            
-            
-            return BadRequest("UpdateUser endpoint - Not implemented");
+            return Ok(await _userService.UpdateUser(user));
         }
         catch (Exception e)
         {
-            Monitoring.Log.Error("Error in UserService.API.UpdateUser", e);
-            throw;
+            Monitoring.Log.Error("Error in UserService.API.UpdateUser", e.Message);
+            return BadRequest("Error in updating user: " + e.Message);
         }
     }
 
@@ -115,13 +127,12 @@ public class UserController : ControllerBase
         {
             Monitoring.Log.Debug("UserService.API.DeleteUser called");
             
-            _userService.DeleteUser(id);
-            return BadRequest("DeleteUser endpoint - Not implemented");
+            return Ok(await _userService.DeleteUser(id));
         }
         catch (Exception e)
         {
-            Monitoring.Log.Error("Error in UserService.API.DeleteUser", e);
-            throw;
+            Monitoring.Log.Error("Error in UserService.API.DeleteUser", e.Message);
+            return BadRequest("Error in deleting user: " + e.Message);
         }
     }
 }

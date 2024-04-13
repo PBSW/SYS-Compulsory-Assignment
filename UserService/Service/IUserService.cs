@@ -11,6 +11,6 @@ public interface IUserService
     
     public Task<User> UpdateUser(UserUpdateDTO user);
     
-    public Task DeleteUser(int userId);
+    public Task<bool> DeleteUser(int userId);
     public Task<UserDTO> GetUserByUsername(string username);
 }

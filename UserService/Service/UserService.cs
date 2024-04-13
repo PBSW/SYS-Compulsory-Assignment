@@ -75,16 +75,14 @@ public class UserService : IUserService
         return await _userRepository.Update(dbUser);
     }
 
-    public async Task DeleteUser(int userId)
+    public async Task<bool> DeleteUser(int userId)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("UserService.DeleteUser");
         activity?.SetTag("userId", userId.ToString());
-        
         Monitoring.Log.Debug("UserService.DeleteUser called");
         
-        
-        await _userRepository.Delete(userId);
+        return await _userRepository.Delete(userId);
     }
 
     public async Task<UserDTO> GetUserByUsername(string username)
@@ -92,7 +90,6 @@ public class UserService : IUserService
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("UserService.GetUserByUsername");
         activity?.SetTag("username", username);
-        
         Monitoring.Log.Debug("UserService.GetUserByUsername called");
         
         User user = await _userRepository.UserByUsername(username);
