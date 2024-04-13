@@ -77,11 +77,4 @@ public class TweetRepository : ITweetRepository
         
         return tweet;
     }
-
-    public async Task<Tweet> Update(Tweet tweet)
-    {
-        var updated = _context.Tweets.Update(tweet);
-        await _context.SaveChangesAsync();
-        return updated.Entity;
-    }
 }

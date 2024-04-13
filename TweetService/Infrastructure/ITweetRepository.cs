@@ -7,6 +7,4 @@ public interface ITweetRepository
     public Task<Tweet> Create(Tweet tweet);
     public Task<bool> Delete(int id);
     public Task<Tweet> Single(int id);
-    public Task<Tweet> Update(Tweet tweet);
-
 }

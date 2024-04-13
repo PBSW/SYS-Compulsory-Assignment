@@ -8,6 +8,7 @@ public class AutoMapperProfiles : Profile
 {
     public AutoMapperProfiles()
     {
+        CreateMap<TweetCreate, Tweet>();
         CreateMap<Tweet, TweetDTO>();
         CreateMap<TweetDTO, Tweet>();
     }

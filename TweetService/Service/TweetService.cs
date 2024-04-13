@@ -32,6 +32,8 @@ public class TweetService : ITweetService
         Monitoring.Log.Debug("TweetService.Post called tweetRepository.Create");
         Tweet tweet = _mapper.Map<TweetCreate, Tweet>(tweetCreate);
 
+        tweet.CreatedAt = DateTime.Now;
+        
         Tweet tweetReturn = await _tweetRepository.Create(tweet);
         
         TweetDTO tweetDto = _mapper.Map<Tweet, TweetDTO>(tweetReturn);
@@ -47,8 +49,11 @@ public class TweetService : ITweetService
 
         Monitoring.Log.Debug("TweetService.GetTweetsFromUser called");
 
-
-        throw new NotImplementedException();
+        if (uid == null || uid <= 0)
+        {
+            Monitoring.Log.Error("User id is invalid");
+            throw new NullReferenceException("User id is invalid");
+        }
     }
 
     public async Task<TweetDTO> GetAllTweets()
