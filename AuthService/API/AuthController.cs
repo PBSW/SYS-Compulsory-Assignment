@@ -32,6 +32,7 @@ public class AuthController : ControllerBase
         } 
         catch (Exception e)
         {
+            Monitoring.Log.Error("Error in AuthController.Login", e.Message);
             return BadRequest(e.Message);
         }
     }
@@ -50,6 +51,7 @@ public class AuthController : ControllerBase
         }
         catch (Exception e)
         {
+            Monitoring.Log.Error("Error in AuthController.Register", e.Message);
             return BadRequest(e.Message);
         }
     }

@@ -43,6 +43,7 @@ public class AuthService : IAuthService
         
         if (authUser == null)
         {
+            Monitoring.Log.Error("User not found");
             throw new ArgumentException("User not found");
         }
         
@@ -57,6 +58,7 @@ public class AuthService : IAuthService
         
         if (user == null)
         {
+            Monitoring.Log.Error("User not found in user service");
             throw new NullReferenceException("User not found in user service");
         }
         
@@ -74,12 +76,12 @@ public class AuthService : IAuthService
         // Check if the DTO is null
         if (dto == null)
         {
+            Monitoring.Log.Error("Dto is null");
             throw new ArgumentNullException("Dto is null");
         }
         
         // Map the DTO to the AuthUser model
         AuthUser authUser = _mapper.Map<RegisterDTO, AuthUser>(dto);
-        
         
         // Generate a salt and hash the password
         authUser.Salt = GenerateSalt();
@@ -96,8 +98,12 @@ public class AuthService : IAuthService
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.Authenticate");
         Monitoring.Log.Debug("AuthService.Authenticate called");
-        
-        if (user == null) return false;
+
+        if (user == null)
+        {
+            Monitoring.Log.Error("User is null");
+            return false;
+        }
         
         var hashedPassword = await _passwordHasher.HashPassword(plainTextPassword, user.Salt);
         

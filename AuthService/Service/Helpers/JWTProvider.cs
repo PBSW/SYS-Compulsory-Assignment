@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Monitoring;
 
 namespace AuthService.Service.Helpers;
 
@@ -9,6 +10,10 @@ public class JWTProvider : IJWTProvider
 {
     public string GenerateToken(int id, string username, IEnumerable<Claim> additionalClaims = null)
     {
+        // Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.GenerateToken");
+        Monitoring.Log.Debug("JWTProvider.GenerateToken called");
+        
         // Add standard claims (e.g., user ID, username)
         var claims = new List<Claim>
         {
