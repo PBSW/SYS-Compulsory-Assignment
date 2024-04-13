@@ -72,11 +72,6 @@ public class UserService : IUserService
             dbUser.Username = user.Username;
         }
         
-        if (user.Password != null)
-        {
-            //dbUser.Password = user.Password;
-        }
-        
         if (user.Bio != null)
         {
             dbUser.Bio = user.Bio;

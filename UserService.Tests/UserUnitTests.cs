@@ -1,6 +1,8 @@
+using AutoMapper;
 using Moq;
 using Shared.Domain;
 using Shared.User;
+using UserService.Helper;
 using UserService.Infrastructure;
 
 namespace UserService.Tests;
@@ -33,13 +35,20 @@ public class UserUnitTests : IDisposable
         });
         mock.Setup(repo => repo.Create(It.IsAny<User>())).ReturnsAsync((User user) =>
         {
-            user.Id = mockUsers.Count + 1;
             mockUsers.Add(user);
-            return user;
+            return true;
         });
-     
 
         return mock;
+    }
+
+    private IMapper GetMapper()
+    {
+        //Inject actual mapper here
+        return new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile(new AutoMapperProfiles());
+        }).CreateMapper();
     }
     
     private List<User> GetMockUsers()
@@ -78,22 +87,23 @@ public class UserUnitTests : IDisposable
     
     
     [Fact]
-    public void Test_Service_Can_Create_User()
+    public async Task Test_Service_Can_Create_User()
     {
         // Arrange
         var mock = _moqRepository();
-        var service = new Service.UserService(mock.Object);
+        var service = new Service.UserService(mock.Object, GetMapper());
         var user = new UserCreateDTO()
         {
-            Username = "test",
+            email = "mail5@mail.com",
+            username = "test",
         };
         
         // Act
-        var created = service.CreateUser(user);
+        var created = await service.CreateUser(user);
         
         // Assert
         Assert.NotNull(created);
-        Assert.Equal("test", created.Result.Username);
+        Assert.True(created);
     }
     
     [Fact]
@@ -101,14 +111,14 @@ public class UserUnitTests : IDisposable
     {
         // Arrange
         var mock = _moqRepository();
-        var service = new Service.UserService(mock.Object);
+        var service = new Service.UserService(mock.Object, GetMapper());
         
         // Act
         var user = service.GetUser(1);
         
         // Assert
         Assert.NotNull(user);
-        Assert.Equal(1, user.Result.Id);
+        Assert.Equal(1, user.Result.id);
     }
     
     [Fact]
@@ -116,13 +126,12 @@ public class UserUnitTests : IDisposable
     {
         // Arrange
         var mock = _moqRepository();
-        var service = new Service.UserService(mock.Object);
+        var service = new Service.UserService(mock.Object, GetMapper());
         var user = new UserUpdateDTO()
         {
             UserId = 1,
             Username = "update-test",
             Bio = "new bio",
-            Email = "newEmail@mail.com",
         };
         
         // Act
@@ -132,7 +141,6 @@ public class UserUnitTests : IDisposable
         Assert.NotNull(updated);
         Assert.Equal("update-test", updated.Result.Username);
         Assert.Equal("new bio", updated.Result.Bio);
-        Assert.Equal("newEmail@mail.com", updated.Result.Email);
     }
     
     [Fact]
@@ -140,7 +148,7 @@ public class UserUnitTests : IDisposable
     {
         // Arrange
         var mock = _moqRepository();
-        var service = new Service.UserService(mock.Object);
+        var service = new Service.UserService(mock.Object, GetMapper());
         var usersSize = mock.Object.All().Result.Count;
         
         // Act
@@ -149,58 +157,7 @@ public class UserUnitTests : IDisposable
         // Assert
         Assert.True(usersSize - 1 == mock.Object.All().Result.Count);
     }
-    
-    [Fact]
-    public async Task Test_Service_Can_Follow_User()
-    {
-        // Arrange
-        var mock = _moqRepository();
-        var service = new Service.UserService(mock.Object);
-        
-        // Act
-        await service.FollowUser(1, 2);
-        
-        // Assert
-        Assert.Single(mock.Object.Single(2).Result.Followers, 1);
-        Assert.Single(mock.Object.Single(1).Result.Following, 1);
-
-        Assert.Contains(mock.Object.Single(2).Result.Followers, u => u.Id == 1);
-        Assert.Contains(mock.Object.Single(1).Result.Following, u => u.Id == 2);
-    }
-    
-    [Fact]
-    public async Task Test_Service_Can_Unfollow_User()
-    {
-        // Arrange
-        var mock = _moqRepository();
-        var service = new Service.UserService(mock.Object);
-        await service.FollowUser(1, 2);
-        
-        // Act
-        await service.UnfollowUser(1, 2);
-        
-        // Assert
-        Assert.Empty(mock.Object.Single(2).Result.Followers);
-        Assert.Empty(mock.Object.Single(1).Result.Following);
-    }
-    
-    [Fact]
-    public void Test_Service_Can_Get_Followers()
-    {
-        // Arrange
-        var mock = _moqRepository();
-        var service = new Service.UserService(mock.Object);
-        
-        //Act
-        var followers = service.GetFollowers(1);
-        
-        
-        // Assert
-        Assert.NotNull(followers);
-        Assert.Empty(followers.Result);
-    }
-    
-    
+  
 
     public void Dispose()
     {

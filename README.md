@@ -7,11 +7,13 @@ The project is a Twitter clone, built on microservices, with a user service, a t
 
 
 ## Inter-service communication
-The services communicate with each other using the AMQP protocol, with RabbitMQ as the message broker. The services are implemented using the EasyNetQ library, which provides a simple API for RabbitMQ.
+The services were intended to communicate with each other using the AMQP protocol, with RabbitMQ as the message broker. This would have been implemented using the EasyNetQ library, which provides a simple API for RabbitMQ.
 
-The user service listens for messages on the `user` queue, the authentication service listens for messages on the `auth` queue, and the tweet service listens for messages on the `tweet` queue. The services send messages to each other when a user is created or deleted, and when a tweet is created or deleted.
+As errors were made in the design process and the services were too dependent on each other, the services are currently communicating with each other using HTTP requests. This is not ideal, as it makes the services tightly coupled and harder to scale and maintain in the long run.
+With that said, the design error was not discovered until the implementation was well underway, and it was decided to continue with the HTTP-based communication for the sake of time and simplicity, rather than refactoring the entire project to use RabbitMQ.
+Additionally, the design error is less likely reoccur in the future, as the lessons learned from this project will be taken into account in future projects. 
 
-The choice of using RabbitMQ for inter-service communication was made because it is a robust and reliable message broker that is easy to set up and use. It also provides features such as message persistence and message acknowledgements, which are important for building reliable distributed systems.
+The choice of using RabbitMQ for inter-service communication would have been preferable as it is a robust and reliable message broker that is easy to set up and use. It also provides features such as message persistence and message acknowledgements, which are important for building reliable distributed systems.
 More importantly over E.g. HTTP or gRPC, RabbitMQ provides a way to decouple the services from each other, which makes it easier to scale and maintain the system in the long run.
 
 
