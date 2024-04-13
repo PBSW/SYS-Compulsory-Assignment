@@ -89,7 +89,7 @@ public class TweetController : ControllerBase
         try
         {
             Monitoring.Log.Debug("TweetController.DeleteTweet called");
-            return Ok();
+            return Ok(await _tweetService.Delete(id));
         } catch (Exception e)
         {
             Monitoring.Log.Error("TweetController.DeleteTweet failed", e.ToString());

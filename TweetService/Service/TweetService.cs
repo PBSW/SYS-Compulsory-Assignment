@@ -79,8 +79,13 @@ public class TweetService : ITweetService
         activity?.SetTag("id", id.ToString());
         
         Monitoring.Log.Debug("TweetService.Delete called");
-        
-        
+
+        if (id == null || id <= 0)
+        {
+            Monitoring.Log.Error("Tweet id is invalid");
+            throw new NullReferenceException("Tweet id is invalid");
+        }
+
         return await _tweetRepository.Delete(id);
     }
 }
