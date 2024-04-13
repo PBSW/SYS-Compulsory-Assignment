@@ -1,4 +1,3 @@
-
 using System.Security.Cryptography;
 using AuthService.Infrastructure;
 using AuthService.Service.Helpers;

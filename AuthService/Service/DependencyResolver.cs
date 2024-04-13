@@ -1,6 +1,5 @@
 ﻿using AuthService.Infrastructure;
 using AuthService.Service.Helpers;
-using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.Service;
 

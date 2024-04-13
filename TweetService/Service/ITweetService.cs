@@ -1,12 +1,14 @@
-﻿using Shared.Domain;
+﻿using Microsoft.AspNetCore.Mvc;
+using Shared.Domain;
+using Shared.Tweet.Dto;
 
 namespace TweetService.Service;
 
 public interface ITweetService
 {
-    public Task<Tweet> Post(Tweet tweet);
-    public Task<IEnumerable<Tweet>> GetTweetsFromUser(int user_id);
-    public Task<IEnumerable<Tweet>> GetRecentTweets(int uid, DateTime fromUtc, DateTime toUtc);
+    public Task<TweetDTO> CreateTweet(TweetCreate tweet);
+    public Task<TweetDTO> GetTweetsFromUser(int uid);
+    public Task<TweetDTO> GetAllTweets();
     public Task<bool> Delete(int id);
     
 }

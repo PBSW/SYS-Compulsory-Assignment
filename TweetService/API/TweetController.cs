@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Shared.Domain;
 using Shared.Monitoring;
 using Shared.Tweet.Dto;
 using TweetService.Service;
@@ -21,56 +22,79 @@ public class TweetController : ControllerBase
     
     [HttpGet]
     [Route("{uid}")]
-    public async Task<ActionResult<IEnumerable<TweetDTO>>> GetTweetsFromUser([FromRoute] int uid)
+    public async Task<IActionResult> GetTweetsFromUser([FromRoute] int uid)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("TweetService.API.GetTweetsFromUser");
         activity?.SetTag("user_id", uid.ToString());
         
         Monitoring.Log.Debug("TweetController.GetTweetsFromUser called");
-        throw new NotImplementedException("TweetService.API.GetTweetsFromUser not implemented");
+
+        try
+        {
+            return Ok(await _tweetService.GetTweetsFromUser(uid));
+        } catch (Exception e)
+        {
+            Monitoring.Log.Error("TweetController.GetTweetsFromUser failed", e.ToString());
+            return BadRequest(e.ToString());
+        }
     }
     
     [HttpGet]
-    [Route("recent/{uid}-{fromUtc}-{toUtc}")]
-    public async Task<ActionResult<IEnumerable<TweetDTO>>> GetRecentTweets([FromRoute] int uid, 
-        [FromRoute] int fromUtc, [FromRoute] int toUtc)
+    public async Task<IActionResult> GetAllTeweets()
     {
         //Monitoring and logging
-        using var activity = Monitoring.ActivitySource.StartActivity("TweetService.API.GetRecentTweets");
-        activity?.SetTag("uid", uid.ToString());
-        activity?.SetTag("fromUtc", fromUtc.ToString());
-        activity?.SetTag("toUtc", toUtc.ToString());
+        using var activity = Monitoring.ActivitySource.StartActivity("TweetService.API.GetAllTweets");
         
-        Monitoring.Log.Debug("TweetController.GetRecentTweets called");
-        
-        var from = DateTimeOffset.FromUnixTimeSeconds(fromUtc).DateTime;
-        var to = DateTimeOffset.FromUnixTimeSeconds(toUtc).DateTime;
+        Monitoring.Log.Debug("TweetController.GetAllTweets called");
 
-        throw new NotImplementedException("TweetService.API.GetRecentTweets not implemented");
+        try
+        {
+            return Ok(await Task.FromResult(_tweetService.GetAllTweets()));
+        } catch (Exception e)
+        {
+            Monitoring.Log.Error("TweetController.GetAllTweets failed", e.ToString());
+            return BadRequest(e.ToString());
+        }
     }
     
-    
     [HttpPost]
-    public async Task<ActionResult<TweetDTO>> PostTweet(TweetCreate tweet)
+    public async Task<IActionResult> PostTweet(TweetCreate tweet)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("TweetService.API.PostTweet");
         activity?.SetTag("tweet", tweet.Content);
         //TODO: activity?.SetTag("author", tweet.AuthorId.ToString());
-        
-        throw new NotImplementedException("TweetService.API.PostTweet not implemented");
+
+        try
+        {
+            Monitoring.Log.Debug("TweetController.PostTweet called");
+            return Ok(await _tweetService.CreateTweet(tweet));
+        }
+        catch (Exception e)
+        {
+            Monitoring.Log.Error("TweetController.PostTweet failed", e.ToString());
+            return BadRequest(e.ToString());
+        }
     }
     
     [HttpDelete]
     [Route("{id}")]
-    public async Task<ActionResult> DeleteTweet([FromRoute] int id)
+    public async Task<IActionResult> DeleteTweet([FromRoute] int id)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("TweetService.API.DeleteTweet");
         activity?.SetTag("id", id.ToString());
-        
-        throw new NotImplementedException("TweetService.API.DeleteTweet not implemented");
+
+        try
+        {
+            Monitoring.Log.Debug("TweetController.DeleteTweet called");
+            return Ok((await _tweetService.DeleteTweet(id));
+        } catch (Exception e)
+        {
+            Monitoring.Log.Error("TweetController.DeleteTweet failed", e.ToString());
+            return BadRequest(e.ToString());
+        }
     }
     
     

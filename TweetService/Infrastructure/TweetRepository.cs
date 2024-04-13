@@ -27,21 +27,6 @@ public class TweetRepository : ITweetRepository
         return await tweets.ToListAsync();
     }
 
-    public async Task<List<Tweet>> AllRecent(IEnumerable<int> ids, DateTime from, DateTime to)
-    {
-        //Monitoring and logging
-        using var activity = Monitoring.ActivitySource.StartActivity("TweetService.Infrastructure.AllRecent");
-        activity?.SetTag("ids", string.Join(",", ids));
-        activity?.SetTag("from", from.ToString());
-        activity?.SetTag("to", to.ToString());
-        
-        Monitoring.Log.Debug("TweetRepository.AllRecent called");
-        
-        
-        var tweets = _context.Tweets.Where(t => ids.Contains(t.AuthorId) && t.CreatedAt >= from && t.CreatedAt <= to);
-        return await tweets.ToListAsync();
-    }
-
     public async Task<Tweet> Create(Tweet tweet)
     {
         //Monitoring and logging

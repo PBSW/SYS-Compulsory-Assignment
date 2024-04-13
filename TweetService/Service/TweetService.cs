@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
-using OpenTelemetry;
+﻿using AutoMapper;
 using Shared.Domain;
 using Shared.Monitoring;
+using Shared.Tweet.Dto;
 using TweetService.Infrastructure;
 
 namespace TweetService.Service;
@@ -9,49 +9,56 @@ namespace TweetService.Service;
 public class TweetService : ITweetService
 {
     private readonly ITweetRepository _tweetRepository;
-
-    public TweetService(ITweetRepository tweetRepository)
+    private readonly IMapper _mapper;
+    
+    public TweetService(ITweetRepository tweetRepository, IMapper mapper)
     {
         _tweetRepository = tweetRepository;
+        _mapper = mapper;
     }
 
-    public async Task<Tweet> Post(Tweet tweet)
+    public async Task<TweetDTO> CreateTweet(TweetCreate tweetCreate)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("TweetService.Service.Post");
-        activity?.SetTag("tweet", tweet.Content);
-        activity?.SetTag("author", tweet.AuthorId.ToString());
+        activity?.SetTag("tweet", tweetCreate.Content);
 
-        Monitoring.Log.Debug("TweetService.Post called");
-
+        if (tweetCreate == null)
+        {   
+            Monitoring.Log.Error("Tweet is null");
+            throw new NullReferenceException("Tweet is null");
+        }
         
-        return await _tweetRepository.Create(tweet);
+        Monitoring.Log.Debug("TweetService.Post called tweetRepository.Create");
+        Tweet tweet = _mapper.Map<TweetCreate, Tweet>(tweetCreate);
+
+        Tweet tweetReturn = await _tweetRepository.Create(tweet);
+        
+        TweetDTO tweetDto = _mapper.Map<Tweet, TweetDTO>(tweetReturn);
+        
+        return tweetDto;
     }
 
-    public async Task<IEnumerable<Tweet>> GetTweetsFromUser(int user_id)
+    public async Task<TweetDTO> GetTweetsFromUser(int uid)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("TweetService.Service.GetTweetsFromUser");
-        activity?.SetTag("user_id", user_id.ToString());
+        activity?.SetTag("user_id", uid.ToString());
 
         Monitoring.Log.Debug("TweetService.GetTweetsFromUser called");
 
 
-        return await _tweetRepository.AllFrom(user_id);
+        return await _tweetRepository.AllFrom(uid);
     }
 
-    public async Task<IEnumerable<Tweet>> GetRecentTweets(int uid, DateTime from, DateTime to)
+    public async Task<TweetDTO> GetAllTweets()
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("TweetService.Service.GetRecentTweets");
-        activity?.SetTag("uid", uid.ToString());
-        activity?.SetTag("from", from.ToString());
-        activity?.SetTag("to", to.ToString());
-        
         Monitoring.Log.Debug("TweetService.GetRecentTweets called");
         
         
-        return await _tweetRepository.AllRecent(new List<int> { uid }, from, to);
+        
     }
 
     public async Task<bool> Delete(int id)
