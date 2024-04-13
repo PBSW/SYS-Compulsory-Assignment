@@ -44,6 +44,7 @@ public class AuthRepository : IAuthRepository
             if (isSuccess)
             {
                 // Add user to the auth database only if the remote service returned true
+                //var authSet = _context.Set<AuthUser>();
                 _context.AuthUsers.Add(authUser);
                 var changes = await _context.SaveChangesAsync();
 
@@ -58,6 +59,7 @@ public class AuthRepository : IAuthRepository
     
     public async Task<AuthUser> FindUser(string username)
     {
+        //var authSet = _context.Set<AuthUser>();
         return await _context.AuthUsers.FirstOrDefaultAsync(user => user.email.Equals(user.email));
     }
 
