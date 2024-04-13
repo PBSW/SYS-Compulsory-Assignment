@@ -81,8 +81,16 @@ public class UserController : ControllerBase
     public async Task<ActionResult<UserDTO>> CreateUser(UserCreateDTO user)
     {
         //Monitoring and logging
-        using var activity = Monitoring.ActivitySource.StartActivity("UserService.CreateUser");
-        activity?.SetTag("user", user.Username);
+        var headers = Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString());
+        var propagator = new TraceContextPropagator();
+        var parrentContext = propagator.Extract(default, headers, (carrier, key) =>
+        {
+            return new List<string>(new[] { headers.ContainsKey(key) ? headers[key].ToString() : String.Empty });
+        });
+
+        Baggage.Current = parrentContext.Baggage;
+        using var activity = Monitoring.ActivitySource.StartActivity("Controller.User.GetUserByUsername received message", ActivityKind.Consumer, parrentContext.ActivityContext);
+
 
         try
         {
