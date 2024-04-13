@@ -3,6 +3,7 @@ using TweetService.Infrastructure;
 using TweetService.Service;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration;
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -11,7 +12,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
-    options.UseSqlServer("Host=MySQL-tweet;database=db;user=database_user;password=Password1!;SslMode=Disabled");
+    options.UseMySql(config.GetConnectionString("TweetDatabase"),
+        ServerVersion.AutoDetect(config.GetConnectionString("TweetDatabase")));
 });
 
 DependencyResolver.RegisterServices(builder.Services);
