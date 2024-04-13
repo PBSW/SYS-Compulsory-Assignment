@@ -62,14 +62,17 @@ public class TweetService : ITweetService
         return tweetDtos;
     }
 
-    public async Task<TweetDTO> GetAllTweets()
+    public async Task<List<TweetDTO>> GetAllTweets()
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("TweetService.Service.GetRecentTweets");
         Monitoring.Log.Debug("TweetService.GetRecentTweets called");
         
+        List<Tweet> tweets = await _tweetRepository.All();
         
-        throw new NotImplementedException();
+        List<TweetDTO> tweetDtos = _mapper.Map<List<Tweet>, List<TweetDTO>>(tweets);
+        
+        return tweetDtos;
     }
 
     public async Task<bool> Delete(int id)

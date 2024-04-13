@@ -8,7 +8,7 @@ public interface ITweetService
 {
     public Task<TweetDTO> CreateTweet(TweetCreate tweet);
     public Task<List<TweetDTO>> GetTweetsFromUser(int uid);
-    public Task<TweetDTO> GetAllTweets();
+    public Task<List<TweetDTO>> GetAllTweets();
     public Task<bool> Delete(int id);
     
 }

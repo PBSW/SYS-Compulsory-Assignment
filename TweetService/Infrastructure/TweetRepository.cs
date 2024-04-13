@@ -14,6 +14,15 @@ public class TweetRepository : ITweetRepository
         _context.Database.EnsureCreated();
     }
 
+    public async Task<List<Tweet>> All()
+    {
+        //Monitoring and logging
+        using var activity = Monitoring.ActivitySource.StartActivity("TweetService.Infrastructure.All");
+        Monitoring.Log.Debug("TweetRepository.All called");
+        
+        return await _context.Tweets.ToListAsync();
+    }
+
     public async Task<List<Tweet>> AllFrom(int id)
     {
         //Monitoring and logging
