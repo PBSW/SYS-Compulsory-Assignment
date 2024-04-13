@@ -59,28 +59,19 @@ public class UserUnitTests : IDisposable
             {
                 Id = 1,
                 Username = "test",
-                Bio = "",
                 Email = "mail1@mail.com",
-                Followers = [],
-                Following = [],
             },
             new User()
             {
                 Id = 2,
                 Username = "test2",
-                Bio = "",
                 Email = "mail2@mail.com",
-                Followers = [],
-                Following = [],
             },
             new User()
             {
                 Id = 3,
                 Username = "test3",
-                Bio = "",
                 Email = "mail3@mail.com",
-                Followers = [],
-                Following = [],
             }
         };
     }
@@ -119,28 +110,6 @@ public class UserUnitTests : IDisposable
         // Assert
         Assert.NotNull(user);
         Assert.Equal(1, user.Result.Id);
-    }
-    
-    [Fact]
-    public void Test_Service_Can_Update_User()
-    {
-        // Arrange
-        var mock = _moqRepository();
-        var service = new Service.UserService(mock.Object, GetMapper());
-        var user = new UserUpdateDTO()
-        {
-            Id = 1,
-            Username = "update-test",
-            Bio = "new bio",
-        };
-        
-        // Act
-        var updated = service.UpdateUser(user);
-        
-        // Assert
-        Assert.NotNull(updated);
-        Assert.Equal("update-test", updated.Result.Username);
-        Assert.Equal("new bio", updated.Result.Bio);
     }
     
     [Fact]
