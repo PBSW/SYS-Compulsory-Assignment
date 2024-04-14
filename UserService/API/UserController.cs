@@ -21,7 +21,7 @@ public class UserController : ControllerBase
         _userService = userService;
     }
     
-    [Authorize(Policy = "RequireAdminRole")]
+    [Authorize]
     [HttpGet]
     [Route("/{id}")]
     public async Task<ActionResult<UserDTO>> GetUserById([FromRoute] int id)
