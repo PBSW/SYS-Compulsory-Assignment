@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Shared.Domain;
 using Shared.Monitoring;
 using Shared.Tweet.Dto;
@@ -6,9 +7,7 @@ using TweetService.Service;
 
 namespace TweetService.API;
 
-/// <summary>
-/// Api contoller for tweets
-/// </summary>
+[Authorize]
 [ApiController]
 [Route("tweet")]
 public class TweetController : ControllerBase
@@ -20,6 +19,7 @@ public class TweetController : ControllerBase
         _tweetService = tweetService;
     }
     
+    [Authorize]
     [HttpGet]
     [Route("{uid}")]
     public async Task<IActionResult> GetTweetsFromUser([FromRoute] int uid)
@@ -40,6 +40,7 @@ public class TweetController : ControllerBase
         }
     }
     
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAllTeweets()
     {
@@ -58,6 +59,7 @@ public class TweetController : ControllerBase
         }
     }
     
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> PostTweet(TweetCreate tweet)
     {
@@ -78,6 +80,7 @@ public class TweetController : ControllerBase
         }
     }
     
+    [Authorize]
     [HttpDelete]
     [Route("{id}")]
     public async Task<IActionResult> DeleteTweet([FromRoute] int id)
@@ -96,8 +99,4 @@ public class TweetController : ControllerBase
             return BadRequest(e.ToString());
         }
     }
-    
-    
-    
-       
 }

@@ -1,4 +1,7 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using TweetService.Infrastructure;
 using TweetService.Service;
 
@@ -15,6 +18,22 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseMySql(config.GetConnectionString("TweetDatabase"),
         ServerVersion.AutoDetect(config.GetConnectionString("TweetDatabase")));
 });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(x =>
+    {
+        x.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidIssuer = config["JwtSettings:Issuer"],
+            ValidAudience = config["JwtSettings:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey
+                (Encoding.UTF8.GetBytes(config["JwtSettings:Secret"])),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = false
+        };
+    });
 
 DependencyResolver.RegisterServices(builder.Services);
 

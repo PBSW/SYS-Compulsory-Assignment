@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenTelemetry;
 using OpenTelemetry.Context.Propagation;
@@ -8,9 +9,7 @@ using UserService.Service;
 
 namespace UserService.API;
 
-/// <summary>
-/// Api contoller for tweets
-/// </summary>
+[Authorize]
 [ApiController]
 [Route("user")]
 public class UserController : ControllerBase
@@ -21,7 +20,8 @@ public class UserController : ControllerBase
     {
         _userService = userService;
     }
-
+    
+    [Authorize]
     [HttpGet]
     [Route("/{id}")]
     public async Task<ActionResult<UserDTO>> GetUserById([FromRoute] int id)
@@ -51,6 +51,7 @@ public class UserController : ControllerBase
         }
     }
 
+    [AllowAnonymous]
     [HttpGet("username/{username}")]
     public async Task<ActionResult<UserDTO>> GetUserByUsername([FromRoute] string username)
     {
@@ -77,6 +78,7 @@ public class UserController : ControllerBase
         }
     }
     
+    [AllowAnonymous]
     [HttpPost ("create")]
     public async Task<ActionResult<UserDTO>> CreateUser(UserCreateDTO user)
     {
@@ -104,6 +106,7 @@ public class UserController : ControllerBase
         }
     }
     
+    [Authorize]
     [HttpPut]
     public async Task<ActionResult<UserDTO>> UpdateUser(UserUpdateDTO user)
     {
@@ -123,6 +126,7 @@ public class UserController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpDelete]
     [Route("{id}")]
     public async Task<ActionResult> DeleteUser([FromRoute] int id)
