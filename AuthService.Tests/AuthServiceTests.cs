@@ -75,7 +75,7 @@ public class AuthServiceTests : IAsyncLifetime
         };
 
         // Act
-        var created = mockRepository.Register(authUser, userDTO).Result;
+        var created = mockRepository.Register(authUser, userDTO, "").Result;
 
         // Assert
         Assert.True(created);

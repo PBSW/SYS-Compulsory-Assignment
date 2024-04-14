@@ -18,7 +18,7 @@ public class AuthRepository : IAuthRepository
         _context.Database.EnsureCreated();
     }
     
-    public async Task<bool> Register(AuthUser authUser, UserCreateDTO userDTO)
+    public async Task<bool> Register(AuthUser authUser, UserCreateDTO userDTO, string jwtToken)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthRepository.Register");
@@ -28,6 +28,9 @@ public class AuthRepository : IAuthRepository
         var client = new RestClient(BaseUrl);
         var request = new RestRequest("user/create", Method.Post);
         request.AddHeader("Content-Type", "application/json");
+        
+        // Add JWT token to Authorization header
+        request.AddHeader("Authorization", $"Bearer {jwtToken}");
 
         // Propagate the trace context
         PropagationHelper.Inject(request, activity);
@@ -57,7 +60,8 @@ public class AuthRepository : IAuthRepository
         }
 
         // Return false if the HTTP request failed or the user creation was not successful
-        throw new Exception("Unable to connect to UserService.");
+Monitoring.Log.Error($"Failed to create user {authUser.Email} in UserService: {response.ErrorMessage}");
+        throw new Exception("Unable to connect to UserService:" + response.ErrorMessage);
     }
     
     public async Task<AuthUser> FindUser(string username)
@@ -66,9 +70,9 @@ public class AuthRepository : IAuthRepository
         return await _context.AuthUsers.FirstOrDefaultAsync(user => user.Email.Equals(user.Email));
     }
 
-    public async Task<UserDTO> GetUserId(string username)
+    public async Task<UserDTO> GetUserId(string username, string jwtToken)
     {
-        //Monitoring and logging
+        // Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthRepository.GetUserId");
         Monitoring.Log.Debug("AuthRepository.GetUserId called");
 
@@ -76,6 +80,10 @@ public class AuthRepository : IAuthRepository
         var client = new RestClient(BaseUrl);
         var request = new RestRequest($"user/username/{username}", Method.Get);
         request.AddHeader("Content-Type", "application/json");
+
+        // Add JWT token to Authorization header
+        Monitoring.Log.Debug(jwtToken);
+        request.AddHeader("Authorization", $"Bearer {jwtToken}");
 
         // Propagate the trace context
         PropagationHelper.Inject(request, activity);
@@ -91,6 +99,6 @@ public class AuthRepository : IAuthRepository
 
         // Log and throw an exception if the HTTP request failed or the user was not successfully fetched
         Monitoring.Log.Error($"Failed to fetch user {username} from UserService: {response.ErrorMessage}");
-        throw new Exception("Unable to connect to UserService.");
+        throw new Exception("Unable to connect to UserService: " + response.ErrorMessage);
     }
 }

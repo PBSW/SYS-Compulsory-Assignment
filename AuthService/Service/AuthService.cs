@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Security.Cryptography;
 using AuthService.Infrastructure;
 using AuthService.Service.Helpers;
@@ -54,7 +55,11 @@ public class AuthService : IAuthService
             return await Task.FromResult<IActionResult>(new UnauthorizedResult());
         }
         
-        UserDTO user = await _authRepository.GetUserId(authUser.Username);
+        // Generate a JWT token
+        string jwtToken = GenerateAdminToken();
+        
+        // Get the user ID from the user service
+        UserDTO user = await _authRepository.GetUserId(authUser.Username, jwtToken);
         
         if (user == null)
         {
@@ -90,9 +95,16 @@ public class AuthService : IAuthService
         // Map the AuthUser model to the UserCreateDTO model
         UserCreateDTO userDTO = _mapper.Map<AuthUser, UserCreateDTO>(authUser);
         
-        return await _authRepository.Register(authUser, userDTO);
+        
+        // Generate a JWT token
+        string jwtToken = GenerateAdminToken();
+        
+        return await _authRepository.Register(authUser, userDTO, jwtToken);
     }
 
+    /*
+     * Helper methods
+     */
     private async Task<bool> Authenticate(string plainTextPassword, AuthUser AuthUser)
     {
         //Monitoring and logging
@@ -105,7 +117,6 @@ public class AuthService : IAuthService
             return false;
         }
         
-        Monitoring.Log.Debug("User Salt: " + AuthUser.Salt);
         var hashedPassword = await _passwordHasher.HashPassword(plainTextPassword, AuthUser.Salt);
         
         if (hashedPassword == AuthUser.HashedPassword)
@@ -114,7 +125,7 @@ public class AuthService : IAuthService
         }
         throw new UnauthorizedAccessException("Invalid password");
     }
-
+    
     private byte[] GenerateSalt()
     {
         //Monitoring and logging
@@ -122,5 +133,17 @@ public class AuthService : IAuthService
         Monitoring.Log.Debug("AuthService.HashPassword called");
         
         return RandomNumberGenerator.GetBytes(keySize);
+    }
+    
+    private string GenerateAdminToken()
+    {
+        var adminClaims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Role, "admin")
+        };
+
+        // Assuming '1' is the admin user's ID and 'adminUser' is the username
+        string adminToken = _jwtProvider.GenerateToken(1, "AuthService", adminClaims);
+        return adminToken;
     }
 }

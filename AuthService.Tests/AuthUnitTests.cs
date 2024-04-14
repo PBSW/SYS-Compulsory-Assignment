@@ -46,7 +46,7 @@ public class AuthUnitTests
         var token = "validToken";
 
         _mockAuthRepository.Setup(repo => repo.FindUser(loginDto.Email)).ReturnsAsync(authUser);
-        _mockAuthRepository.Setup(repo => repo.GetUserId(authUser.Username)).ReturnsAsync(userDto);
+        _mockAuthRepository.Setup(repo => repo.GetUserId(authUser.Username, "")).ReturnsAsync(userDto);
         _mockPasswordHasher.Setup(hasher => hasher.HashPassword(loginDto.PlainPassword, authUser.Salt)).ReturnsAsync(authUser.HashedPassword);
         _mockJwtProvider.Setup(jwt => jwt.GenerateToken(userDto.Id, userDto.Username, null)).Returns(token);
 
@@ -69,7 +69,7 @@ public class AuthUnitTests
         _mockMapper.Setup(m => m.Map<RegisterDTO, AuthUser>(registerDto)).Returns(authUser);
         _mockPasswordHasher.Setup(hasher => hasher.HashPassword(registerDto.PlainPassword, authUser.Salt)).ReturnsAsync("hashedPassword");
         _mockMapper.Setup(m => m.Map<AuthUser, UserCreateDTO>(authUser)).Returns(userCreateDto);
-        _mockAuthRepository.Setup(repo => repo.Register(authUser, userCreateDto)).ReturnsAsync(true);
+        _mockAuthRepository.Setup(repo => repo.Register(authUser, userCreateDto, "")).ReturnsAsync(true);
 
         // Act
         var result = await _authService.Register(registerDto);

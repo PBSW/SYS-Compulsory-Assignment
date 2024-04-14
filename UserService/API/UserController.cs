@@ -21,7 +21,7 @@ public class UserController : ControllerBase
         _userService = userService;
     }
     
-    [Authorize]
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpGet]
     [Route("/{id}")]
     public async Task<ActionResult<UserDTO>> GetUserById([FromRoute] int id)
@@ -51,7 +51,7 @@ public class UserController : ControllerBase
         }
     }
 
-    [AllowAnonymous]
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("username/{username}")]
     public async Task<ActionResult<UserDTO>> GetUserByUsername([FromRoute] string username)
     {
@@ -78,7 +78,7 @@ public class UserController : ControllerBase
         }
     }
     
-    [AllowAnonymous]
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpPost ("create")]
     public async Task<ActionResult<UserDTO>> CreateUser(UserCreateDTO user)
     {
