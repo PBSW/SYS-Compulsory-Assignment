@@ -31,7 +31,7 @@ public class AuthServiceTests : IAsyncLifetime
         _userServiceMock = WireMockServer.Start(
             new WireMockServerSettings
             {
-                Urls = new[] { "http://user-service:8080" }
+                Urls = new[] { "http://user-service:8080" },
             });
 
         _userServiceMock.Given(
@@ -53,14 +53,19 @@ public class AuthServiceTests : IAsyncLifetime
 
 
     [Fact]
-    public void Test_AuthService_Can_Register_User()
+    public async Task Test_AuthService_Can_Register_User()
     {
-        // Arrange
-        var mockContext = new Mock<DatabaseContext>();
-        mockContext.Setup<DbSet<AuthUser>>(x => x.Set<AuthUser>())
-            .ReturnsDbSet(new AuthUser[] { }, new Mock<DbSet<AuthUser>>());
+        //InitializeAsync is called before each test
+        await InitializeAsync();
         
-        var mockRepository = new AuthRepository(mockContext.Object);
+        // Arrange
+        var contextOptions = new DbContextOptionsBuilder<DatabaseContext>()
+            .UseInMemoryDatabase("TestDatabase")
+            .Options;
+
+        var context = new DatabaseContext(contextOptions);
+  
+        var mockRepository = new AuthRepository(context);
         var authUser = new AuthUser()
         {
             Email = "test@mail.com",
@@ -79,5 +84,8 @@ public class AuthServiceTests : IAsyncLifetime
 
         // Assert
         Assert.True(created);
+        
+        // Clean up
+        await DisposeAsync();
     }
 }
