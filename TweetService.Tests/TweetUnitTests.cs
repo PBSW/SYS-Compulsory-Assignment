@@ -1,4 +1,3 @@
-
 using AutoMapper;
 using FluentAssertions;
 using Moq;
@@ -8,13 +7,13 @@ using Shared.Domain;
 using Shared.Tweet.Dto;
 using TweetService.Infrastructure;
 
-public class TweetServiceTests
+public class TweetUnitTests
 {
     private readonly Mock<ITweetRepository> _mockTweetRepository = new Mock<ITweetRepository>();
     private readonly Mock<IMapper> _mockMapper = new Mock<IMapper>();
     private readonly TweetService.Service.TweetService _tweetService;
 
-    public TweetServiceTests()
+    public TweetUnitTests()
     {
         _tweetService = new TweetService.Service.TweetService(_mockTweetRepository.Object, _mockMapper.Object);
     }

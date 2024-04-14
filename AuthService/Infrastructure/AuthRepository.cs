@@ -71,25 +71,26 @@ public class AuthRepository : IAuthRepository
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthRepository.GetUserId");
         Monitoring.Log.Debug("AuthRepository.GetUserId called");
-        
+
         // Set up HTTP client
         var client = new RestClient(BaseUrl);
-        var request = new RestRequest("user/", Method.Post);
+        var request = new RestRequest($"user/username/{username}", Method.Get);
         request.AddHeader("Content-Type", "application/json");
-        
+
         // Propagate the trace context
         PropagationHelper.Inject(request, activity);
-        
+
         // Execute HTTP request and await the result
-        var response = await client.ExecuteAsync(request);
+        var response = await client.ExecuteAsync<UserDTO>(request);
 
         // Check if the HTTP response was successful
-        if (response.IsSuccessStatusCode && response.Content != null)
+        if (response.IsSuccessful && response.Data != null)
         {
-            return JsonConvert.DeserializeObject<UserDTO>(response.Content);
+            return response.Data; // Directly return the deserialized UserDTO object
         }
 
-        // Return false if the HTTP request failed or the user creation was not successful
+        // Log and throw an exception if the HTTP request failed or the user was not successfully fetched
+        Monitoring.Log.Error($"Failed to fetch user {username} from UserService: {response.ErrorMessage}");
         throw new Exception("Unable to connect to UserService.");
     }
 }

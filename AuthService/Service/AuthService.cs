@@ -93,21 +93,26 @@ public class AuthService : IAuthService
         return await _authRepository.Register(authUser, userDTO);
     }
 
-    private async Task<bool> Authenticate(string plainTextPassword, AuthUser user)
+    private async Task<bool> Authenticate(string plainTextPassword, AuthUser AuthUser)
     {
         //Monitoring and logging
         using var activity = Monitoring.ActivitySource.StartActivity("AuthService.Service.Authenticate");
         Monitoring.Log.Debug("AuthService.Authenticate called");
 
-        if (user == null)
+        if (AuthUser == null)
         {
             Monitoring.Log.Error("User is null");
             return false;
         }
         
-        var hashedPassword = await _passwordHasher.HashPassword(plainTextPassword, user.Salt);
+        Monitoring.Log.Debug("User Salt: " + AuthUser.Salt);
+        var hashedPassword = await _passwordHasher.HashPassword(plainTextPassword, AuthUser.Salt);
         
-        return hashedPassword.Equals(user.HashedPassword);
+        if (hashedPassword == AuthUser.HashedPassword)
+        {
+            return true;
+        }
+        throw new UnauthorizedAccessException("Invalid password");
     }
 
     private byte[] GenerateSalt()
